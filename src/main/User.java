@@ -2,6 +2,8 @@ import java.time.LocalDateTime;
 
 public abstract class User {
 
+    //common details for every user
+
     private int userId;
     private String name;
     private String email;
@@ -38,6 +40,7 @@ public abstract class User {
     public LocalDateTime getCreatedAt(){
         return createdAt ;
     }
+    //allows profile details to be updated
 
     public void setEmail(String email) {
         this.email = email;
