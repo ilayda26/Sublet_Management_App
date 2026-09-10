@@ -1,27 +1,21 @@
-public class Main{
-    public static void main ( String[] args) {
+public class Main {
 
-        Student student = new Student(
-            1, "Anna","anna@student.de", "123445"
+    public static void main(String[] args) {
 
+        Report report = new Report(
+                1,
+                1,
+                10,
+                "The listing looks suspicious"
         );
 
-        Lister lister = new Lister(
-            2,"Daniel", "daniel@student.de", "123456"
-        );
+        System.out.println("Report ID: " + report.getReportId());
+        System.out.println("Listing ID: " + report.getListingId());
+        System.out.println("Reason: " + report.getReason());
+        System.out.println("Status: " + report.getStatus());
 
-        Admin admin = new Admin(
-            3,"Admin", "admin@berlinsublet.de","1234admin"
+        report.setStatus("Resolved");
 
-        );
-
-        System.out.println(student.getName()+ "-"+ student.getRole());
-        System.out.println(lister.getName()+ "-"+ lister.getRole());
-        System.out.println(admin.getName()+ "-"+ admin.getRole());
-
-
-
-
-
+        System.out.println("New status: " + report.getStatus());
     }
-} 
+}
