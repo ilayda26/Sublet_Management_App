@@ -42,6 +42,30 @@ public class Database {
         }
     }
 
+    //Creates the reports table if it doesn't already exists
+    public static void createReportsTable(){
+        String sql = """
+                CREATE TABLE IF NOT EXISTS reports(
+                report_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                reason TEXT NOT NULL,
+                status TEXT NOT NULL,
+                date TEXT NOT NULL
+            )
+            """;
+
+        try(Connection connection = connect();
+            Statement statement = connection.createStatement()){
+
+            statement.execute(sql);
+            System.out.println("Reports table ready.");
+
+        }catch(SQLException e){
+            System.out.println(
+                "Could not create reports table." + e.getMessage()
+            );
+        }
+    }
+
     // Tests if the application can connect to the database
     public static void main(String[] args) {
         try (Connection connection = connect()) {
@@ -51,6 +75,8 @@ public class Database {
         }
 
         createListingsTable();
+        createReportsTable();
     }
+
     
 }
