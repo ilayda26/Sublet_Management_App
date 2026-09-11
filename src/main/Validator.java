@@ -12,7 +12,7 @@ public class Validator {
 
 
     
-}
+
 public static boolean validEmail(String email){
     return email != null
              && email.contains("@")
@@ -34,9 +34,12 @@ public static boolean validPrice(double price){
 
 // End must be after the start date
 
-public static boolean validDated(LocalDate startDate, LocalDate endDate ){
+public static boolean validDates(LocalDate startDate, LocalDate endDate ){
     return startDate != null
                   && endDate != null
                   && endDate.isAfter(startDate);
+
+}
+
 
 }
