@@ -44,6 +44,18 @@ public class Report{
     public void setDate(LocalDateTime date){
         this.date = date;
     }
+
+    public void submitReport(){
+        status = "Submitted";
+    }
+
+    public void reviewReport(){
+        status = "Under Review";
+    }
+
+    public void updateStatus(String newStatus){
+        status = newStatus;
+    }
 }
 
 
