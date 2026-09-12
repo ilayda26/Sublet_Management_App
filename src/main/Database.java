@@ -136,6 +136,71 @@ public class Database {
         
     }
 
+    // Updates an existing listing in the database
+    public static void updateListing(Listing listing) {
+
+        String sql = """
+                UPDATE listings
+                SET title = ?,
+                    location = ?,
+                    price = ?,
+                    description = ?,
+                    start_date = ?,
+                    end_date = ?,
+                    status = ?,
+                    created_at = ?
+                WHERE listing_id = ?
+                """;
+
+        try (Connection connection = connect();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, listing.getTitle());
+            statement.setString(2, listing.getLocation());
+            statement.setBigDecimal(3, listing.getPrice());
+            statement.setString(4, listing.getDescription());
+            statement.setString(5, listing.getStartDate().toString());
+            statement.setString(6, listing.getEndDate().toString());
+            statement.setString(7, listing.getStatus());
+            statement.setString(8, listing.getCreatedAt().toString());
+            statement.setInt(9, listing.getlistingId());
+
+        int rowsUpdated = statement.executeUpdate();
+
+        if (rowsUpdated > 0) {
+            System.out.println("Listing updated successfully.");
+        } else {
+            System.out.println("Listing not found.");
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Could not update listing: " + e.getMessage());
+    }
+}
+
+    //Deletes a listing from the database
+    public static void deleteListing(int listingId) {
+
+        String sql = "DELETE FROM listings WHERE listing_id = ?";
+
+        try(Connection connection = connect();
+             PreparedStatement statement = connection.prepareStatement(sql)){
+
+            statement.setInt(1, listingId);
+
+            int rowsDeleted = statement.executeUpdate();
+
+            if (rowsDeleted > 0) {
+                System.out.println("Listing deleted successfully.");
+            } else {
+                System.out.println("Listing not found.");
+            }
+
+        }catch (SQLException e) {
+            System.out.println("Could not delete listing:" + e.getMessage());
+        }
+    }
+
     // Tests if the application can connect to the database
     public static void main(String[] args) {
         try (Connection connection = connect()) {
