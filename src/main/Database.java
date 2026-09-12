@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 public class Database {
 
@@ -66,6 +67,36 @@ public class Database {
         }
     }
 
+    //ads a new listing to database
+    public static void addListing(Listing listing){
+
+        String sql = """
+                INSERT INTO listings
+                (title, location, price, description, start_date, end_date, status, created_at)
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?)
+                """;
+
+        try (Connection connection = connect();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+                statement.setString(1, listing.getTitle());
+                statement.setString(2, listing.getLocation());
+                statement.setBigDecimal(3, listing.getPrice());
+                statement.setString(4, listing.getDescription());
+                statement.setString(5, listing.getStartDate().toString());
+                statement.setString(6, listing.getEndDate().toString());
+                statement.setString(7, listing.getStatus());
+                statement.setString(8, listing.getCreatedAt().toString());
+
+                statement.executeUpdate();
+
+                System.out.println("Listing added successfully.");
+
+             }catch (SQLException e){
+                System.out.println("Could not add listing" + e.getMessage());
+             }
+    }
+
     // Tests if the application can connect to the database
     public static void main(String[] args) {
         try (Connection connection = connect()) {
@@ -76,7 +107,7 @@ public class Database {
 
         createListingsTable();
         createReportsTable();
+
     }
 
-    
 }
