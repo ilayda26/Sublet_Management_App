@@ -15,6 +15,7 @@ public class StudentDashboard extends JFrame {
     private JTextField startDateField;
     private JTextField endDateField;
     private JPanel resultsPanel;
+    private JLabel welcomeLabel;
 
   private List<Listing> listings = new ArrayList<>();
 private List<Application> applications = new ArrayList<>();
@@ -56,12 +57,12 @@ private int nextReportId = 1;
     JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     rightPanel.setBackground(new Color(240, 120, 30));
 
-    JLabel welcome = new JLabel(
+     welcomeLabel = new JLabel(
             "Welcome, " + currentStudent.getName()
     );
 
-    welcome.setFont(new Font("Arial", Font.BOLD, 16));
-    welcome.setForeground(Color.WHITE);
+    welcomeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+    welcomeLabel.setForeground(Color.WHITE);
 
     JButton applicationsButton = new JButton("My Applications");
     JButton profileButton = new JButton("Profile");
@@ -91,7 +92,7 @@ private int nextReportId = 1;
             e -> logout()
     );
 
-    rightPanel.add(welcome);
+    rightPanel.add(welcomeLabel);
     rightPanel.add(Box.createHorizontalStrut(10));
     rightPanel.add(applicationsButton);
     rightPanel.add(profileButton);
@@ -819,26 +820,101 @@ private int nextReportId = 1;
             "\nRole: " + currentStudent.getRole() +
             "\nAccount Created: " + currentStudent.getCreatedAt();
 
-    JOptionPane.showMessageDialog(
-            this,
-            profile,
+    Object[] options = {
+        "Edit Profile",
+        "Close"
+    }
+    ;
+
+
+
+
+    int choice = JOptionPane.showOptionDialog(
+            this, 
+            profile, 
             "My Profile",
-            JOptionPane.INFORMATION_MESSAGE
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.INFORMATION_MESSAGE,
+            null,
+            options,
+            options[0]
+            
     );
+
+    if (choice == 0) {
+        editProfile();
+    }
 }
 
-private void logout() {
+private void editProfile(){
+        JTextField nameField = new JTextField(currentStudent.getName());
+        JTextField emailField = new JTextField(currentStudent.getEmail());
+        JPasswordField passwordField = new JPasswordField();
+        JPanel panel = new JPanel(new GridLayout(0,1,5,5));
 
-    int choice = JOptionPane.showConfirmDialog(
-            this,
-            "Are you sure you want to logout?",
-            "Logout",
-            JOptionPane.YES_NO_OPTION
-    );
+        panel.add(new JLabel("Name"));
+        panel.add(nameField);
 
-    if (choice == JOptionPane.YES_OPTION) {
-        dispose();
-        new LoginFrame();
-    }
+        panel.add(new JLabel("Email"));
+        panel.add(emailField);
+
+        panel.add(new JLabel("New Password(Leave blank to keep current)"));
+        panel.add(passwordField);
+
+        int choice = JOptionPane.showConfirmDialog(this,
+                 panel,
+                  "Edit Profile",
+                   JOptionPane.OK_CANCEL_OPTION,
+                   JOptionPane.PLAIN_MESSAGE
+                );
+
+        if (choice != JOptionPane.OK_OPTION) {
+                return;
+        }     
+        
+        String name = nameField.getText().trim();
+        String email = emailField.getText().trim();
+        String password = new String(passwordField.getPassword());
+
+        if (!Validator.notEmpty(name)){
+                JOptionPane.showMessageDialog(this,
+                         "Name cannot be empty");
+                         return;
+        }
+
+        if (!Validator.validEmail(email)){
+                JOptionPane.showMessageDialog(this,
+                         "Please enter a valid email");
+                         return;
+        }
+
+        if (!password.isEmpty() && !Validator.validPassword(password)){
+                JOptionPane.showMessageDialog(
+                        this,
+                         "Password must contain at least 6 characters");
+                         return;
+        }
+
+        currentStudent.setName(name);
+        currentStudent.setEmail(email);
+
+        if (!password.isEmpty()){
+                currentStudent.setPassword(password);
+        }
+
+        welcomeLabel.setText("Welcome," + currentStudent.getName());
+
+        JOptionPane.showMessageDialog(this, "Profile updated successfully");
+
+
+
+
+
+
+
+
+
+
+
 }
 }
