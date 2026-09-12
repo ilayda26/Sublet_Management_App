@@ -3,6 +3,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database {
 
@@ -95,6 +98,42 @@ public class Database {
              }catch (SQLException e){
                 System.out.println("Could not add listing" + e.getMessage());
              }
+    }
+
+    //Returns all listings storted in the database
+    public static List<Listing> getAllListings(){
+        List<Listing> listings = new ArrayList<>();
+
+        String sql = "SELECT* FROM listings";
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)){
+
+            while (resultSet.next()){
+
+                Listing listing = new Listing(
+                    resultSet.getInt("listing_id"),
+                    resultSet.getString("title"),
+                    resultSet.getString("location"),
+                    resultSet.getBigDecimal("price"),
+                    resultSet.getString("description"),
+                    java.time.LocalDate.parse(resultSet.getString("start_date")),
+                    java.time.LocalDate.parse(resultSet.getString("end_date")),
+                    resultSet.getString("status"),
+                    java.time.LocalDateTime.parse(resultSet.getString("created_at"))
+        
+                );
+
+                listings.add(listing);
+            }
+
+        }catch (SQLException e) {
+            System.out.println("Could not retireve listings:" + e.getMessage());
+        }
+
+        return listings;
+        
     }
 
     // Tests if the application can connect to the database
