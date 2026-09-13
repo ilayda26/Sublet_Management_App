@@ -70,7 +70,7 @@ public class Database {
         }
     }
 
-    //ads a new listing to database
+    //Adds a new listing to database
     public static void addListing(Listing listing){
 
         String sql = """
@@ -165,18 +165,18 @@ public class Database {
             statement.setString(8, listing.getCreatedAt().toString());
             statement.setInt(9, listing.getlistingId());
 
-        int rowsUpdated = statement.executeUpdate();
+            int rowsUpdated = statement.executeUpdate();
 
-        if (rowsUpdated > 0) {
-            System.out.println("Listing updated successfully.");
-        } else {
-            System.out.println("Listing not found.");
+            if (rowsUpdated > 0) {
+                System.out.println("Listing updated successfully.");
+            } else {
+                System.out.println("Listing not found.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Could not update listing: " + e.getMessage());
         }
-
-    } catch (SQLException e) {
-        System.out.println("Could not update listing: " + e.getMessage());
     }
-}
 
     //Deletes a listing from the database
     public static void deleteListing(int listingId) {
@@ -201,6 +201,121 @@ public class Database {
         }
     }
 
+    //Adds a new report for the database
+    public static void addReport(Report report) {
+
+        String sql = """
+                INSERT INTO reports
+                (reason, status, date)
+                VALUES(?, ?, ?)
+                """;
+
+        try(Connection connection = connect();
+             PreparedStatement statement = connection.prepareStatement(sql)){
+            
+            statement.setString(1, report.getReason());
+            statement.setString(2, report.getStatus());
+            statement.setString(3, report.getDate().toString());
+
+            statement.executeUpdate();
+
+            System.out.println("Report added successfully.");
+
+        } catch (SQLException e) {
+        System.out.println("Could not add report: " + e.getMessage());
+        }
+        
+    }
+
+    //Returns all reports stored in the database
+    public static List<Report> getAllReports() {
+        
+        List<Report> reports = new ArrayList<>();
+        String sql = "SELECT * FROM reports";
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+       
+            while (resultSet.next()) {
+
+                Report report = new Report(
+                    resultSet.getInt("report_id"),
+                    resultSet.getString("reason"),
+                    resultSet.getString("status"),
+                    java.time.LocalDateTime.parse(
+                        resultSet.getString("date")
+                    )
+
+                );
+
+                reports.add(report);
+
+            }
+        
+        
+        }catch (SQLException e) {
+        System.out.println("Could not retrieve reports: " + e.getMessage());
+        }
+
+        return reports;
+        
+    }
+
+    // Updates an existing report in the database
+    public static void updateReport(Report report) {
+
+        String sql = """
+                UPDATE reports
+                SET reason = ?,
+                    status = ?,
+                    date = ?
+                WHERE report_id = ?
+                """;
+
+        try(Connection connection = connect();
+             PreparedStatement statement = connection.prepareStatement(sql)){
+
+            statement.setString(1, report.getReason());
+            statement.setString(2, report.getStatus());
+            statement.setString(3, report.getDate().toString());
+            statement.setInt(4, report.getReportId());
+             
+            int rowsUpdated = statement.executeUpdate();
+
+            if (rowsUpdated > 0) {
+            System.out.println("Report updated successfully.");
+            } else {
+            System.out.println("Report not found.");
+            }
+
+        }catch(SQLException e) {
+        System.out.println("Could not update report: " + e.getMessage());
+        }
+    }
+
+    //Deletes a report from the database
+    public static void deleteReport(int reportId) {
+        String sql = "DELETE FROM reports WHERE report_id = ?";
+
+        try(Connection connection = connect();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, reportId);
+
+            int rowsDeleted = statement.executeUpdate();
+
+            if (rowsDeleted > 0){
+                System.out.println("Report deleted successfully.");
+            }else {
+                System.out.println("Report not found");
+            }
+        
+        }catch(SQLException e) {
+            System.out.println("Could not delete report: " + e.getMessage());
+        }
+    }
+
     // Tests if the application can connect to the database
     public static void main(String[] args) {
         try (Connection connection = connect()) {
@@ -210,8 +325,8 @@ public class Database {
         }
 
         createListingsTable();
-        createReportsTable();
-
+        createReportsTable();  
+        
     }
 
 }
