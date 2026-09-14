@@ -163,7 +163,7 @@ public class Database {
             statement.setString(6, listing.getEndDate().toString());
             statement.setString(7, listing.getStatus());
             statement.setString(8, listing.getCreatedAt().toString());
-            statement.setInt(9, listing.getlistingId());
+            statement.setInt(9, listing.getListingId());
 
             int rowsUpdated = statement.executeUpdate();
 
