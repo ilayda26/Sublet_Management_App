@@ -99,12 +99,9 @@ public class ListerDashboard extends JFrame {
                 showCreateListingForm()
         );
 
-        myListingsButton.addActionListener(e ->
-                JOptionPane.showMessageDialog(
-                        this,
-                        "My Listings will be added next."
-                )
-        );
+       myListingsButton.addActionListener(e ->
+        showMyListings()
+);
 
         applicationsButton.addActionListener(e ->
                 JOptionPane.showMessageDialog(
@@ -145,6 +142,138 @@ public class ListerDashboard extends JFrame {
 
         return button;
     }
+
+    private void showMyListings() {
+
+    JDialog dialog = new JDialog(
+            this,
+            "My Listings",
+            true
+    );
+
+    dialog.setSize(750, 500);
+    dialog.setLocationRelativeTo(this);
+
+    JPanel listingsPanel = new JPanel();
+    listingsPanel.setLayout(
+            new BoxLayout(listingsPanel, BoxLayout.Y_AXIS)
+    );
+    listingsPanel.setBackground(Color.WHITE);
+    listingsPanel.setBorder(
+            BorderFactory.createEmptyBorder(20, 20, 20, 20)
+    );
+
+    JLabel heading = new JLabel("My Listings");
+    heading.setFont(new Font("Arial", Font.BOLD, 24));
+    heading.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+    listingsPanel.add(heading);
+    listingsPanel.add(Box.createVerticalStrut(20));
+
+    boolean foundListing = false;
+
+    for (Listing listing : listings) {
+
+        if (listing.getListerId()
+                == currentLister.getUserId()) {
+
+            foundListing = true;
+
+            JPanel card = new JPanel();
+            card.setLayout(
+                    new BoxLayout(card, BoxLayout.Y_AXIS)
+            );
+
+            card.setBackground(Color.WHITE);
+            card.setBorder(
+                    BorderFactory.createCompoundBorder(
+                            BorderFactory.createLineBorder(
+                                    new Color(255, 140, 0),
+                                    2
+                            ),
+                            BorderFactory.createEmptyBorder(
+                                    15, 15, 15, 15
+                            )
+                    )
+            );
+
+            card.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            JLabel title = new JLabel(
+                    listing.getTitle()
+            );
+
+            title.setFont(
+                    new Font("Arial", Font.BOLD, 18)
+            );
+
+            JLabel location = new JLabel(
+                    "Location: "
+                            + listing.getBorough()
+                            + ", "
+                            + listing.getNeighbourhood()
+            );
+
+            JLabel price = new JLabel(
+                    "Price: €"
+                            + listing.getPrice()
+                            + " per month"
+            );
+
+            JLabel dates = new JLabel(
+                    "Available: "
+                            + listing.getStartDate()
+                            + " to "
+                            + listing.getEndDate()
+            );
+
+            JLabel roomType = new JLabel(
+                    "Room Type: "
+                            + listing.getRoomType()
+            );
+
+            JLabel description = new JLabel(
+                    "<html>Description: "
+                            + listing.getDescription()
+                            + "</html>"
+            );
+
+            card.add(title);
+            card.add(Box.createVerticalStrut(8));
+            card.add(location);
+            card.add(price);
+            card.add(dates);
+            card.add(roomType);
+            card.add(description);
+
+            listingsPanel.add(card);
+            listingsPanel.add(
+                    Box.createVerticalStrut(15)
+            );
+        }
+    }
+
+    if (!foundListing) {
+
+        JLabel noListings = new JLabel(
+                "You have not created any listings yet."
+        );
+
+        noListings.setFont(
+                new Font("Arial", Font.PLAIN, 16)
+        );
+
+        listingsPanel.add(noListings);
+    }
+
+    JScrollPane scrollPane =
+            new JScrollPane(listingsPanel);
+
+    scrollPane.setBorder(null);
+
+    dialog.add(scrollPane);
+    dialog.setVisible(true);
+}
 
     private void showCreateListingForm() {
 
