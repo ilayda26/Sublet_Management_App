@@ -16,6 +16,7 @@ public class Listing{
     private String roomType;
     private String description;
     private boolean available;
+    private String imagePath;
 
     public Listing(
         int listingId, int listerId, String title, String borough, String neighbourhood, double price, LocalDate startDate, LocalDate endDate, String roomType, String description
@@ -93,6 +94,21 @@ public class Listing{
     public void setAvailable(Boolean available) {
         this.available = available;
     }
+    public String getImagePath() {
+    return imagePath;
+}
+
+public void setImagePath(String imagePath) {
+    this.imagePath = imagePath;
+}
+
+public void setTitle(String title) {
+    this.title = title;
+}
+
+public int getListingId() {
+    return listingId;
+}
 
 
 
