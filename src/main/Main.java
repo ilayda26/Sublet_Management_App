@@ -1,14 +1,23 @@
+import javax.swing.*;
+
 public class Main {
 
     public static void main(String[] args) {
 
-        Lister lister = new Lister(
-                2,
-                "Daniel",
-                "daniel@sublet.de",
-                "123456"
-        );
+        Database.initialize();
 
-        new ListerDashboard(lister);
+        Database.loadData();
+
+        // Saves everything when the program closes
+        Runtime.getRuntime()
+                .addShutdownHook(
+                        new Thread(
+                                Database::saveAll
+                        )
+                );
+
+        SwingUtilities.invokeLater(
+                LoginFrame::new
+        );
     }
 }

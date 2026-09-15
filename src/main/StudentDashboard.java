@@ -27,12 +27,11 @@ public class StudentDashboard extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Keeps some temporary listings available for testing
+        // Temporary examples until database integration
         addSampleListings();
 
-        JPanel mainPanel = new JPanel(
-                new BorderLayout()
-        );
+        JPanel mainPanel =
+                new JPanel(new BorderLayout());
 
         mainPanel.setBackground(Color.WHITE);
 
@@ -47,7 +46,11 @@ public class StudentDashboard extends JFrame {
         );
 
         add(mainPanel);
+
         setVisible(true);
+
+        // Listings are visible immediately
+        displayAllListings();
     }
 
     private JPanel createHeader() {
@@ -203,7 +206,7 @@ public class StudentDashboard extends JFrame {
 
         panel.setBorder(
                 BorderFactory.createEmptyBorder(
-                        25, 60, 20, 60
+                        20, 60, 15, 60
                 )
         );
 
@@ -214,7 +217,7 @@ public class StudentDashboard extends JFrame {
                 new Font(
                         "Arial",
                         Font.BOLD,
-                        28
+                        26
                 )
         );
 
@@ -222,8 +225,23 @@ public class StudentDashboard extends JFrame {
                 Component.LEFT_ALIGNMENT
         );
 
+        JLabel filterInfo =
+                new JLabel(
+                        "Use the options below to filter available listings."
+                );
+
+        filterInfo.setForeground(Color.GRAY);
+
+        filterInfo.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
         JLabel boroughLabel =
                 new JLabel("Borough");
+
+        boroughLabel.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
 
         boroughBox =
                 new JComboBox<>(
@@ -231,7 +249,7 @@ public class StudentDashboard extends JFrame {
                 );
 
         boroughBox.setMaximumSize(
-                new Dimension(400, 35)
+                new Dimension(400, 32)
         );
 
         boroughBox.setAlignmentX(
@@ -241,11 +259,15 @@ public class StudentDashboard extends JFrame {
         JLabel neighbourhoodLabel =
                 new JLabel("Neighbourhood");
 
+        neighbourhoodLabel.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
         neighbourhoodBox =
                 new JComboBox<>();
 
         neighbourhoodBox.setMaximumSize(
-                new Dimension(400, 35)
+                new Dimension(400, 32)
         );
 
         neighbourhoodBox.setAlignmentX(
@@ -253,13 +275,19 @@ public class StudentDashboard extends JFrame {
         );
 
         JLabel priceLabel =
-                new JLabel("Maximum Price (€)");
+                new JLabel(
+                        "Maximum Price (€) - Optional"
+                );
+
+        priceLabel.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
 
         priceField =
                 new JTextField();
 
         priceField.setMaximumSize(
-                new Dimension(400, 35)
+                new Dimension(400, 32)
         );
 
         priceField.setAlignmentX(
@@ -268,14 +296,18 @@ public class StudentDashboard extends JFrame {
 
         JLabel startDateLabel =
                 new JLabel(
-                        "Available From (YYYY-MM-DD)"
+                        "Available From (YYYY-MM-DD) - Optional"
                 );
+
+        startDateLabel.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
 
         startDateField =
                 new JTextField();
 
         startDateField.setMaximumSize(
-                new Dimension(400, 35)
+                new Dimension(400, 32)
         );
 
         startDateField.setAlignmentX(
@@ -284,35 +316,58 @@ public class StudentDashboard extends JFrame {
 
         JLabel endDateLabel =
                 new JLabel(
-                        "Available Until (YYYY-MM-DD)"
+                        "Available Until (YYYY-MM-DD) - Optional"
                 );
+
+        endDateLabel.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
 
         endDateField =
                 new JTextField();
 
         endDateField.setMaximumSize(
-                new Dimension(400, 35)
+                new Dimension(400, 32)
         );
 
         endDateField.setAlignmentX(
                 Component.LEFT_ALIGNMENT
         );
 
-        JButton searchButton =
-                new JButton("Search Listings");
+        JButton filterButton =
+                new JButton("Filter Listings");
 
-        searchButton.setBackground(
+        filterButton.setBackground(
                 new Color(240, 120, 30)
         );
 
-        searchButton.setForeground(Color.WHITE);
-        searchButton.setFocusPainted(false);
+        filterButton.setForeground(Color.WHITE);
+        filterButton.setFocusPainted(false);
 
-        searchButton.setMaximumSize(
-                new Dimension(400, 40)
+        filterButton.setMaximumSize(
+                new Dimension(400, 38)
         );
 
-        searchButton.setAlignmentX(
+        filterButton.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        JButton showAllButton =
+                new JButton("Show All Listings");
+
+        showAllButton.setBackground(Color.WHITE);
+
+        showAllButton.setForeground(
+                new Color(240, 120, 30)
+        );
+
+        showAllButton.setFocusPainted(false);
+
+        showAllButton.setMaximumSize(
+                new Dimension(400, 38)
+        );
+
+        showAllButton.setAlignmentX(
                 Component.LEFT_ALIGNMENT
         );
 
@@ -320,43 +375,78 @@ public class StudentDashboard extends JFrame {
                 e -> updateNeighbourhoods()
         );
 
-        searchButton.addActionListener(
-                e -> searchListings()
+        filterButton.addActionListener(
+                e -> filterListings()
         );
 
+        showAllButton.addActionListener(e -> {
+
+            priceField.setText("");
+            startDateField.setText("");
+            endDateField.setText("");
+
+            displayAllListings();
+        });
+
         panel.add(heading);
-        panel.add(Box.createVerticalStrut(20));
+
+        panel.add(
+                Box.createVerticalStrut(5)
+        );
+
+        panel.add(filterInfo);
+
+        panel.add(
+                Box.createVerticalStrut(15)
+        );
 
         panel.add(boroughLabel);
-        panel.add(Box.createVerticalStrut(5));
+        panel.add(Box.createVerticalStrut(4));
         panel.add(boroughBox);
 
-        panel.add(Box.createVerticalStrut(10));
+        panel.add(
+                Box.createVerticalStrut(8)
+        );
 
         panel.add(neighbourhoodLabel);
-        panel.add(Box.createVerticalStrut(5));
+        panel.add(Box.createVerticalStrut(4));
         panel.add(neighbourhoodBox);
 
-        panel.add(Box.createVerticalStrut(10));
+        panel.add(
+                Box.createVerticalStrut(8)
+        );
 
         panel.add(priceLabel);
-        panel.add(Box.createVerticalStrut(5));
+        panel.add(Box.createVerticalStrut(4));
         panel.add(priceField);
 
-        panel.add(Box.createVerticalStrut(10));
+        panel.add(
+                Box.createVerticalStrut(8)
+        );
 
         panel.add(startDateLabel);
-        panel.add(Box.createVerticalStrut(5));
+        panel.add(Box.createVerticalStrut(4));
         panel.add(startDateField);
 
-        panel.add(Box.createVerticalStrut(10));
+        panel.add(
+                Box.createVerticalStrut(8)
+        );
 
         panel.add(endDateLabel);
-        panel.add(Box.createVerticalStrut(5));
+        panel.add(Box.createVerticalStrut(4));
         panel.add(endDateField);
 
-        panel.add(Box.createVerticalStrut(20));
-        panel.add(searchButton);
+        panel.add(
+                Box.createVerticalStrut(15)
+        );
+
+        panel.add(filterButton);
+
+        panel.add(
+                Box.createVerticalStrut(6)
+        );
+
+        panel.add(showAllButton);
 
         updateNeighbourhoods();
 
@@ -382,15 +472,6 @@ public class StudentDashboard extends JFrame {
                 )
         );
 
-        JLabel message =
-                new JLabel(
-                        "Search for a sublet to see results."
-                );
-
-        message.setForeground(Color.GRAY);
-
-        resultsPanel.add(message);
-
         JScrollPane scrollPane =
                 new JScrollPane(resultsPanel);
 
@@ -406,10 +487,14 @@ public class StudentDashboard extends JFrame {
     private void updateNeighbourhoods() {
 
         String borough =
-                (String) boroughBox
-                        .getSelectedItem();
+                (String)
+                        boroughBox.getSelectedItem();
 
         neighbourhoodBox.removeAllItems();
+
+        if (borough == null) {
+            return;
+        }
 
         for (String neighbourhood :
                 BerlinLocations.getNeighbourhoods(
@@ -422,15 +507,82 @@ public class StudentDashboard extends JFrame {
         }
     }
 
-    private void searchListings() {
+    // Shows every available listing
+    private void displayAllListings() {
+
+        resultsPanel.removeAll();
+
+        JLabel heading =
+                new JLabel(
+                        "Available Listings"
+                );
+
+        heading.setFont(
+                new Font(
+                        "Arial",
+                        Font.BOLD,
+                        22
+                )
+        );
+
+        heading.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        resultsPanel.add(heading);
+
+        resultsPanel.add(
+                Box.createVerticalStrut(15)
+        );
+
+        int count = 0;
+
+        for (Listing listing :
+                DataStore.listings) {
+
+            if (listing.isAvailable()) {
+
+                resultsPanel.add(
+                        createListingCard(
+                                listing
+                        )
+                );
+
+                resultsPanel.add(
+                        Box.createVerticalStrut(15)
+                );
+
+                count++;
+            }
+        }
+
+        if (count == 0) {
+
+            JLabel noListings =
+                    new JLabel(
+                            "No listings are currently available."
+                    );
+
+            noListings.setForeground(
+                    Color.GRAY
+            );
+
+            resultsPanel.add(noListings);
+        }
+
+        resultsPanel.revalidate();
+        resultsPanel.repaint();
+    }
+
+    private void filterListings() {
 
         String borough =
-                (String) boroughBox
-                        .getSelectedItem();
+                (String)
+                        boroughBox.getSelectedItem();
 
         String neighbourhood =
-                (String) neighbourhoodBox
-                        .getSelectedItem();
+                (String)
+                        neighbourhoodBox.getSelectedItem();
 
         String priceText =
                 priceField.getText().trim();
@@ -441,55 +593,74 @@ public class StudentDashboard extends JFrame {
         String endText =
                 endDateField.getText().trim();
 
-        if (!Validator.notEmpty(priceText)
-                || !Validator.notEmpty(startText)
-                || !Validator.notEmpty(endText)) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Please complete all search fields."
-            );
-
-            return;
-        }
-
         try {
 
-            double maximumPrice =
-                    Double.parseDouble(priceText);
+            Double maximumPrice = null;
 
-            if (!Validator.validPrice(
-                    maximumPrice
-            )) {
+            LocalDate startDate = null;
+            LocalDate endDate = null;
 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Price must be greater than zero."
-                );
+            // Price is optional
+            if (Validator.notEmpty(priceText)) {
 
-                return;
+                maximumPrice =
+                        Double.parseDouble(
+                                priceText
+                        );
+
+                if (!Validator.validPrice(
+                        maximumPrice
+                )) {
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Price must be greater than zero."
+                    );
+
+                    return;
+                }
             }
 
-            LocalDate startDate =
-                    LocalDate.parse(startText);
+            // Dates are optional
+            if (Validator.notEmpty(startText)
+                    || Validator.notEmpty(endText)) {
 
-            LocalDate endDate =
-                    LocalDate.parse(endText);
+                if (!Validator.notEmpty(startText)
+                        || !Validator.notEmpty(endText)) {
 
-            if (!Validator.validDates(
-                    startDate,
-                    endDate
-            )) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Please enter both start and end dates."
+                    );
 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "End date must be after start date."
-                );
+                    return;
+                }
 
-                return;
+                startDate =
+                        LocalDate.parse(
+                                startText
+                        );
+
+                endDate =
+                        LocalDate.parse(
+                                endText
+                        );
+
+                if (!Validator.validDates(
+                        startDate,
+                        endDate
+                )) {
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "End date must be after start date."
+                    );
+
+                    return;
+                }
             }
 
-            displayResults(
+            displayFilteredListings(
                     borough,
                     neighbourhood,
                     maximumPrice,
@@ -513,23 +684,25 @@ public class StudentDashboard extends JFrame {
         }
     }
 
-    private void displayResults(
+    private void displayFilteredListings(
             String borough,
             String neighbourhood,
-            double maximumPrice,
+            Double maximumPrice,
             LocalDate startDate,
             LocalDate endDate) {
 
         resultsPanel.removeAll();
 
         JLabel heading =
-                new JLabel("Search Results");
+                new JLabel(
+                        "Filtered Listings"
+                );
 
         heading.setFont(
                 new Font(
                         "Arial",
                         Font.BOLD,
-                        20
+                        22
                 )
         );
 
@@ -538,6 +711,7 @@ public class StudentDashboard extends JFrame {
         );
 
         resultsPanel.add(heading);
+
         resultsPanel.add(
                 Box.createVerticalStrut(15)
         );
@@ -556,17 +730,21 @@ public class StudentDashboard extends JFrame {
                             .equals(neighbourhood);
 
             boolean correctPrice =
-                    listing.getPrice()
+                    maximumPrice == null
+                            || listing.getPrice()
                             <= maximumPrice;
 
             boolean correctDates =
-                    !startDate.isBefore(
+                    startDate == null
+                            || endDate == null
+
+                            || (!startDate.isBefore(
                             listing.getStartDate()
                     )
 
                             && !endDate.isAfter(
                             listing.getEndDate()
-                    );
+                    ));
 
             if (correctLocation
                     && correctPrice
@@ -591,10 +769,12 @@ public class StudentDashboard extends JFrame {
 
             JLabel noResults =
                     new JLabel(
-                            "No listings found for your search."
+                            "No listings match the selected filters."
                     );
 
-            noResults.setForeground(Color.GRAY);
+            noResults.setForeground(
+                    Color.GRAY
+            );
 
             resultsPanel.add(noResults);
         }
@@ -607,14 +787,26 @@ public class StudentDashboard extends JFrame {
             Listing listing) {
 
         JPanel card =
-                new JPanel(new BorderLayout());
+                new JPanel(
+                        new BorderLayout(
+                                15,
+                                0
+                        )
+                );
 
         card.setBackground(
-                new Color(248, 248, 248)
+                new Color(
+                        248,
+                        248,
+                        248
+                )
         );
 
         card.setMaximumSize(
-                new Dimension(800, 170)
+                new Dimension(
+                        800,
+                        170
+                )
         );
 
         card.setBorder(
@@ -626,14 +818,19 @@ public class StudentDashboard extends JFrame {
                                         220
                                 )
                         ),
+
                         BorderFactory.createEmptyBorder(
-                                15, 20, 15, 20
+                                15,
+                                20,
+                                15,
+                                20
                         )
                 )
         );
 
-        // Picture
-        if (listing.getImagePath() != null) {
+        // Listing picture
+        if (listing.getImagePath()
+                != null) {
 
             File imageFile =
                     new File(
@@ -642,13 +839,14 @@ public class StudentDashboard extends JFrame {
 
             if (imageFile.exists()) {
 
-                ImageIcon original =
+                ImageIcon originalIcon =
                         new ImageIcon(
                                 listing.getImagePath()
                         );
 
-                Image scaled =
-                        original.getImage()
+                Image scaledImage =
+                        originalIcon
+                                .getImage()
                                 .getScaledInstance(
                                         170,
                                         110,
@@ -657,14 +855,10 @@ public class StudentDashboard extends JFrame {
 
                 JLabel imageLabel =
                         new JLabel(
-                                new ImageIcon(scaled)
+                                new ImageIcon(
+                                        scaledImage
+                                )
                         );
-
-                imageLabel.setBorder(
-                        BorderFactory.createEmptyBorder(
-                                0, 0, 0, 15
-                        )
-                );
 
                 card.add(
                         imageLabel,
@@ -677,7 +871,11 @@ public class StudentDashboard extends JFrame {
                 new JPanel();
 
         information.setBackground(
-                new Color(248, 248, 248)
+                new Color(
+                        248,
+                        248,
+                        248
+                )
         );
 
         information.setLayout(
@@ -721,28 +919,65 @@ public class StudentDashboard extends JFrame {
                                 + listing.getEndDate()
                 );
 
+        JLabel roomType =
+                new JLabel(
+                        listing.getRoomType()
+                );
+
         information.add(title);
+
         information.add(
                 Box.createVerticalStrut(5)
         );
+
         information.add(location);
         information.add(price);
         information.add(dates);
+        information.add(roomType);
 
         JButton detailsButton =
-                new JButton("View Details");
+                new JButton(
+                        "View Details"
+                );
 
         detailsButton.setBackground(
-                new Color(240, 120, 30)
+                new Color(
+                        240,
+                        120,
+                        30
+                )
         );
 
-        detailsButton.setForeground(Color.WHITE);
-        detailsButton.setFocusPainted(false);
+        detailsButton.setForeground(
+                Color.WHITE
+        );
+
+        detailsButton.setFocusPainted(
+                false
+        );
 
         detailsButton.addActionListener(
-                e -> showListingDetails(
-                        listing
+                e ->
+                        showListingDetails(
+                                listing
+                        )
+        );
+
+        JPanel buttonPanel =
+                new JPanel(
+                        new GridBagLayout()
+                );
+
+        buttonPanel.setBackground(
+                new Color(
+                        248,
+                        248,
+                        248
                 )
+        );
+
+        buttonPanel.add(
+                detailsButton
         );
 
         card.add(
@@ -751,7 +986,7 @@ public class StudentDashboard extends JFrame {
         );
 
         card.add(
-                detailsButton,
+                buttonPanel,
                 BorderLayout.EAST
         );
 
@@ -771,44 +1006,43 @@ public class StudentDashboard extends JFrame {
 
         String details =
                 "<html>"
+
                         + "<b>"
                         + listing.getTitle()
-                        + "</b><br><br>"
+                        + "</b>"
 
-                        + "Location: "
+                        + "<br><br>Location: "
                         + listing.getNeighbourhood()
                         + ", "
                         + listing.getBorough()
-                        + "<br>"
 
-                        + "Price: €"
+                        + "<br>Price: €"
                         + listing.getPrice()
-                        + " per month<br>"
+                        + " per month"
 
-                        + "Available: "
+                        + "<br>Available: "
                         + listing.getStartDate()
                         + " to "
                         + listing.getEndDate()
-                        + "<br>"
 
-                        + "Room Type: "
+                        + "<br>Room Type: "
                         + listing.getRoomType()
-                        + "<br><br>"
 
-                        + "Description:<br>"
+                        + "<br><br>Description:<br>"
                         + listing.getDescription()
 
                         + "</html>";
 
-        JLabel textLabel =
+        JLabel detailsLabel =
                 new JLabel(details);
 
         panel.add(
-                textLabel,
+                detailsLabel,
                 BorderLayout.CENTER
         );
 
-        if (listing.getImagePath() != null) {
+        if (listing.getImagePath()
+                != null) {
 
             File imageFile =
                     new File(
@@ -817,13 +1051,14 @@ public class StudentDashboard extends JFrame {
 
             if (imageFile.exists()) {
 
-                ImageIcon original =
+                ImageIcon originalIcon =
                         new ImageIcon(
                                 listing.getImagePath()
                         );
 
-                Image scaled =
-                        original.getImage()
+                Image scaledImage =
+                        originalIcon
+                                .getImage()
                                 .getScaledInstance(
                                         250,
                                         170,
@@ -832,7 +1067,9 @@ public class StudentDashboard extends JFrame {
 
                 JLabel imageLabel =
                         new JLabel(
-                                new ImageIcon(scaled)
+                                new ImageIcon(
+                                        scaledImage
+                                )
                         );
 
                 panel.add(
@@ -861,11 +1098,17 @@ public class StudentDashboard extends JFrame {
                 );
 
         if (choice == 0) {
-            applyForListing(listing);
+
+            applyForListing(
+                    listing
+            );
         }
 
         if (choice == 1) {
-            reportListing(listing);
+
+            reportListing(
+                    listing
+            );
         }
     }
 
@@ -894,8 +1137,12 @@ public class StudentDashboard extends JFrame {
                 new Application(
                         DataStore
                                 .getNextApplicationId(),
-                        currentStudent.getUserId(),
-                        listing.getListingId()
+
+                        currentStudent
+                                .getUserId(),
+
+                        listing
+                                .getListingId()
                 );
 
         DataStore.applications.add(
@@ -956,12 +1203,19 @@ public class StudentDashboard extends JFrame {
                 new Report(
                         DataStore
                                 .getNextReportId(),
-                        currentStudent.getUserId(),
-                        listing.getListingId(),
+
+                        currentStudent
+                                .getUserId(),
+
+                        listing
+                                .getListingId(),
+
                         reason
                 );
 
-        DataStore.reports.add(report);
+        DataStore.reports.add(
+                report
+        );
 
         JOptionPane.showMessageDialog(
                 this,
@@ -988,7 +1242,8 @@ public class StudentDashboard extends JFrame {
 
             Listing listing =
                     findListing(
-                            application.getListingId()
+                            application
+                                    .getListingId()
                     );
 
             if (listing != null) {
@@ -1009,7 +1264,9 @@ public class StudentDashboard extends JFrame {
                         listing.getBorough()
                 );
 
-                text.append("\nStatus: ");
+                text.append(
+                        "\nStatus: "
+                );
 
                 text.append(
                         application.getStatus()
@@ -1059,7 +1316,7 @@ public class StudentDashboard extends JFrame {
         return null;
     }
 
-    // Adds temporary examples only if no listings exist
+    // Temporary listings for testing
     private void addSampleListings() {
 
         if (!DataStore.listings.isEmpty()) {
@@ -1177,12 +1434,14 @@ public class StudentDashboard extends JFrame {
 
         JTextField nameField =
                 new JTextField(
-                        currentStudent.getName()
+                        currentStudent
+                                .getName()
                 );
 
         JTextField emailField =
                 new JTextField(
-                        currentStudent.getEmail()
+                        currentStudent
+                                .getEmail()
                 );
 
         JPasswordField passwordField =
@@ -1234,14 +1493,19 @@ public class StudentDashboard extends JFrame {
         }
 
         String name =
-                nameField.getText().trim();
+                nameField
+                        .getText()
+                        .trim();
 
         String email =
-                emailField.getText().trim();
+                emailField
+                        .getText()
+                        .trim();
 
         String password =
                 new String(
-                        passwordField.getPassword()
+                        passwordField
+                                .getPassword()
                 );
 
         if (!Validator.notEmpty(name)) {
@@ -1278,7 +1542,10 @@ public class StudentDashboard extends JFrame {
         }
 
         currentStudent.setName(name);
-        currentStudent.setEmail(email);
+
+        currentStudent.setEmail(
+                email
+        );
 
         if (!password.isEmpty()) {
 
@@ -1289,7 +1556,8 @@ public class StudentDashboard extends JFrame {
 
         welcomeLabel.setText(
                 "Welcome, "
-                        + currentStudent.getName()
+                        + currentStudent
+                        .getName()
         );
 
         JOptionPane.showMessageDialog(
