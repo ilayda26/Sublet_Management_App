@@ -1,8 +1,13 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MarketplaceDashboard extends JFrame {
 
@@ -13,26 +18,65 @@ public class MarketplaceDashboard extends JFrame {
 
     private JComboBox<String> boroughBox;
     private JComboBox<String> neighbourhoodBox;
+
     private JTextField priceField;
     private JTextField startDateField;
     private JTextField endDateField;
 
     private JPanel listingsGrid;
+    private JLabel listingCountLabel;
 
-    private final Color orange = new Color(240, 120, 30);
-    private final Color lightBackground = new Color(248, 248, 248);
+    private JPanel applicationsContent;
+    private JPanel myListingsContent;
+
+    private final Color ORANGE =
+            new Color(240, 120, 30);
+
+    private final Color ORANGE_HOVER =
+            new Color(220, 100, 15);
+
+    private final Color DARK =
+            new Color(26, 35, 26);
+
+    private final Color MUTED =
+            new Color(105, 110, 102);
+
+    private final Color BACKGROUND =
+            new Color(250, 250, 247);
+
+    private final Color BORDER =
+            new Color(225, 226, 220);
+
+    private final Color HERO =
+            new Color(255, 248, 241);
 
     public MarketplaceDashboard(User user) {
 
-        this.currentUser = user;
+        currentUser = user;
 
         setTitle("Berlin Sublet");
-        setSize(1200, 800);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1280, 820);
+
+        setMinimumSize(
+                new Dimension(
+                        1050,
+                        700
+                )
+        );
+
+        setDefaultCloseOperation(
+                JFrame.EXIT_ON_CLOSE
+        );
+
         setLocationRelativeTo(null);
 
-        cardLayout = new CardLayout();
-        pagesPanel = new JPanel(cardLayout);
+        cardLayout =
+                new CardLayout();
+
+        pagesPanel =
+                new JPanel(
+                        cardLayout
+                );
 
         pagesPanel.add(
                 createMarketplacePage(),
@@ -45,20 +89,26 @@ public class MarketplaceDashboard extends JFrame {
         );
 
         pagesPanel.add(
-                createMyListingsPage(),
-                "MY_LISTINGS"
-        );
-
-        pagesPanel.add(
                 createApplicationsPage(),
                 "APPLICATIONS"
         );
 
+        pagesPanel.add(
+                createMyListingsPage(),
+                "MY_LISTINGS"
+        );
+
         JPanel root =
-                new JPanel(new BorderLayout());
+                new JPanel(
+                        new BorderLayout()
+                );
+
+        root.setBackground(
+                BACKGROUND
+        );
 
         root.add(
-                createNavigation(),
+                createHeader(),
                 BorderLayout.NORTH
         );
 
@@ -69,122 +119,154 @@ public class MarketplaceDashboard extends JFrame {
 
         add(root);
 
-        setVisible(true);
-
         refreshListings();
+
+        setVisible(true);
     }
 
-    // ---------------------------------------------------------
-    // NAVIGATION
-    // ---------------------------------------------------------
+    // -------------------------------------------------
+    // HEADER
+    // -------------------------------------------------
 
-    private JPanel createNavigation() {
+    private JPanel createHeader() {
 
-        JPanel navigation =
-                new JPanel(new BorderLayout());
+        JPanel header =
+                new JPanel(
+                        new BorderLayout()
+                );
 
-        navigation.setBackground(orange);
+        header.setBackground(
+                Color.WHITE
+        );
 
-        navigation.setBorder(
-                BorderFactory.createEmptyBorder(
-                        15,
-                        25,
-                        15,
-                        25
+        header.setBorder(
+                BorderFactory.createCompoundBorder(
+
+                        BorderFactory.createMatteBorder(
+                                0,
+                                0,
+                                1,
+                                0,
+                                BORDER
+                        ),
+
+                        new EmptyBorder(
+                                14,
+                                45,
+                                14,
+                                45
+                        )
                 )
         );
 
         JLabel logo =
-                new JLabel("BERLIN SUBLET");
+                new JLabel(
+                        "<html>"
+                                + "<b>BERLIN</b>"
+                                + "<font color='#F0781E'>SUBLET</font>"
+                                + "</html>"
+                );
 
         logo.setFont(
                 new Font(
-                        "Arial",
+                        "SansSerif",
                         Font.BOLD,
-                        24
+                        26
                 )
         );
 
-        logo.setForeground(Color.WHITE);
+        logo.setForeground(
+                DARK
+        );
 
         JPanel menu =
                 new JPanel(
                         new FlowLayout(
                                 FlowLayout.RIGHT,
-                                8,
+                                12,
                                 0
                         )
                 );
 
-        menu.setBackground(orange);
+        menu.setBackground(
+                Color.WHITE
+        );
 
-        JButton findButton =
-                createNavigationButton(
-                        "Find a Sublet"
+        JButton browseButton =
+                createTextButton(
+                        "Browse"
                 );
 
-        JButton listButton =
-                createNavigationButton(
-                        "List a Room"
+        JButton postButton =
+                new RoundedButton(
+                        "+ Post sublet",
+                        ORANGE,
+                        Color.WHITE
                 );
 
         JButton applicationsButton =
-                createNavigationButton(
+                createTextButton(
                         "Applications"
                 );
 
-        JButton myListingsButton =
-                createNavigationButton(
+        JButton listingsButton =
+                createTextButton(
                         "My Listings"
                 );
 
         JButton profileButton =
-                createNavigationButton(
+                createOutlineButton(
                         "Profile"
                 );
 
         JButton logoutButton =
-                createNavigationButton(
+                createOutlineButton(
                         "Logout"
                 );
 
-        findButton.addActionListener(e -> {
+        browseButton.addActionListener(
+                e -> {
 
-            refreshListings();
+                    refreshListings();
 
-            cardLayout.show(
-                    pagesPanel,
-                    "MARKETPLACE"
-            );
-        });
+                    cardLayout.show(
+                            pagesPanel,
+                            "MARKETPLACE"
+                    );
+                }
+        );
 
-        listButton.addActionListener(e -> {
+        postButton.addActionListener(
+                e ->
+                        cardLayout.show(
+                                pagesPanel,
+                                "LIST_ROOM"
+                        )
+        );
 
-            cardLayout.show(
-                    pagesPanel,
-                    "LIST_ROOM"
-            );
-        });
+        applicationsButton.addActionListener(
+                e -> {
 
-        applicationsButton.addActionListener(e -> {
+                    refreshApplicationsPage();
 
-            refreshApplicationsPage();
+                    cardLayout.show(
+                            pagesPanel,
+                            "APPLICATIONS"
+                    );
+                }
+        );
 
-            cardLayout.show(
-                    pagesPanel,
-                    "APPLICATIONS"
-            );
-        });
+        listingsButton.addActionListener(
+                e -> {
 
-        myListingsButton.addActionListener(e -> {
+                    refreshMyListingsPage();
 
-            refreshMyListingsPage();
-
-            cardLayout.show(
-                    pagesPanel,
-                    "MY_LISTINGS"
-            );
-        });
+                    cardLayout.show(
+                            pagesPanel,
+                            "MY_LISTINGS"
+                    );
+                }
+        );
 
         profileButton.addActionListener(
                 e -> showProfile()
@@ -194,51 +276,108 @@ public class MarketplaceDashboard extends JFrame {
                 e -> logout()
         );
 
-        menu.add(findButton);
-        menu.add(listButton);
-        menu.add(applicationsButton);
-        menu.add(myListingsButton);
-        menu.add(profileButton);
-        menu.add(logoutButton);
+        menu.add(
+                browseButton
+        );
 
-        navigation.add(
+        menu.add(
+                postButton
+        );
+
+        menu.add(
+                applicationsButton
+        );
+
+        menu.add(
+                listingsButton
+        );
+
+        menu.add(
+                profileButton
+        );
+
+        menu.add(
+                logoutButton
+        );
+
+        header.add(
                 logo,
                 BorderLayout.WEST
         );
 
-        navigation.add(
+        header.add(
                 menu,
                 BorderLayout.EAST
         );
 
-        return navigation;
+        return header;
     }
 
-    private JButton createNavigationButton(
+    private JButton createTextButton(
             String text) {
 
         JButton button =
-                new JButton(text);
-
-        button.setBackground(Color.WHITE);
-        button.setForeground(orange);
-
-        button.setFocusPainted(false);
+                new JButton(
+                        text
+                );
 
         button.setFont(
                 new Font(
-                        "Arial",
+                        "SansSerif",
                         Font.BOLD,
-                        13
+                        14
+                )
+        );
+
+        button.setForeground(
+                DARK
+        );
+
+        button.setBackground(
+                Color.WHITE
+        );
+
+        button.setBorderPainted(
+                false
+        );
+
+        button.setContentAreaFilled(
+                false
+        );
+
+        button.setFocusPainted(
+                false
+        );
+
+        button.setCursor(
+                Cursor.getPredefinedCursor(
+                        Cursor.HAND_CURSOR
                 )
         );
 
         return button;
     }
 
-    // ---------------------------------------------------------
-    // MARKETPLACE PAGE
-    // ---------------------------------------------------------
+    private JButton createOutlineButton(
+            String text) {
+
+        RoundedButton button =
+                new RoundedButton(
+                        text,
+                        Color.WHITE,
+                        DARK
+                );
+
+        button.setBorderColor(
+                BORDER
+        );
+
+        return button;
+    }
+
+    // -------------------------------------------------
+    // MARKETPLACE
+    // -------------------------------------------------
 
     private JScrollPane createMarketplacePage() {
 
@@ -252,176 +391,823 @@ public class MarketplaceDashboard extends JFrame {
                 )
         );
 
-        page.setBackground(Color.WHITE);
+        page.setBackground(
+                BACKGROUND
+        );
 
         page.setBorder(
-                BorderFactory.createEmptyBorder(
-                        30,
-                        50,
-                        40,
-                        50
+                new EmptyBorder(
+                        28,
+                        45,
+                        60,
+                        45
                 )
         );
 
-        JLabel title =
-                new JLabel(
-                        "Find your next sublet"
+        JPanel hero =
+                createHero();
+
+        hero.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        page.add(
+                hero
+        );
+
+        page.add(
+                Box.createVerticalStrut(
+                        26
+                )
+        );
+
+        JPanel filterCard =
+                createFilterPanel();
+
+        filterCard.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        page.add(
+                filterCard
+        );
+
+        page.add(
+                Box.createVerticalStrut(
+                        34
+                )
+        );
+
+        JPanel listingsHeader =
+                new JPanel(
+                        new BorderLayout()
                 );
 
-        title.setFont(
+        listingsHeader.setOpaque(
+                false
+        );
+
+        listingsHeader.setMaximumSize(
+                new Dimension(
+                        Integer.MAX_VALUE,
+                        70
+                )
+        );
+
+        listingsHeader.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        JPanel titleArea =
+                new JPanel();
+
+        titleArea.setOpaque(
+                false
+        );
+
+        titleArea.setLayout(
+                new BoxLayout(
+                        titleArea,
+                        BoxLayout.Y_AXIS
+                )
+        );
+
+        JLabel available =
+                new JLabel(
+                        "●  AVAILABLE NOW"
+                );
+
+        available.setFont(
                 new Font(
-                        "Arial",
+                        "SansSerif",
+                        Font.BOLD,
+                        13
+                )
+        );
+
+        available.setForeground(
+                ORANGE
+        );
+
+        listingCountLabel =
+                new JLabel(
+                        "0 listings"
+                );
+
+        listingCountLabel.setFont(
+                new Font(
+                        "SansSerif",
                         Font.BOLD,
                         30
                 )
         );
 
-        title.setAlignmentX(
-                Component.LEFT_ALIGNMENT
+        listingCountLabel.setForeground(
+                DARK
         );
 
-        JLabel subtitle =
-                new JLabel(
-                        "Browse available student accommodation in Berlin."
-                );
-
-        subtitle.setForeground(
-                Color.GRAY
+        titleArea.add(
+                available
         );
 
-        subtitle.setAlignmentX(
-                Component.LEFT_ALIGNMENT
-        );
-
-        page.add(title);
-
-        page.add(
-                Box.createVerticalStrut(5)
-        );
-
-        page.add(subtitle);
-
-        page.add(
-                Box.createVerticalStrut(25)
-        );
-
-        page.add(
-                createFilterPanel()
-        );
-
-        page.add(
-                Box.createVerticalStrut(30)
-        );
-
-        JLabel listingsTitle =
-                new JLabel(
-                        "Available Listings"
-                );
-
-        listingsTitle.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        23
+        titleArea.add(
+                Box.createVerticalStrut(
+                        4
                 )
         );
 
-        listingsTitle.setAlignmentX(
-                Component.LEFT_ALIGNMENT
+        titleArea.add(
+                listingCountLabel
         );
 
-        page.add(listingsTitle);
+        listingsHeader.add(
+                titleArea,
+                BorderLayout.WEST
+        );
 
         page.add(
-                Box.createVerticalStrut(15)
+                listingsHeader
         );
 
+        page.add(
+                Box.createVerticalStrut(
+                        16
+                )
+        );
+
+        // GridBagLayout prevents the cards
+        // from stretching across the screen
         listingsGrid =
                 new JPanel(
-                        new GridLayout(
-                                0,
-                                3,
-                                18,
-                                18
-                        )
+                        new GridBagLayout()
                 );
 
         listingsGrid.setBackground(
-                Color.WHITE
+                BACKGROUND
         );
 
         listingsGrid.setAlignmentX(
                 Component.LEFT_ALIGNMENT
         );
 
-        page.add(listingsGrid);
+        page.add(
+                listingsGrid
+        );
 
         JScrollPane scrollPane =
-                new JScrollPane(page);
+                new JScrollPane(
+                        page
+                );
 
-        scrollPane.setBorder(null);
+        scrollPane.setBorder(
+                null
+        );
 
-        scrollPane.getVerticalScrollBar()
-                .setUnitIncrement(18);
+        scrollPane.setBackground(
+                BACKGROUND
+        );
+
+        scrollPane.getViewport()
+                .setBackground(
+                        BACKGROUND
+                );
+
+        scrollPane
+                .getVerticalScrollBar()
+                .setUnitIncrement(
+                        20
+                );
+
+        scrollPane.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+        );
 
         return scrollPane;
     }
 
-    private JPanel createFilterPanel() {
+    // -------------------------------------------------
+    // HERO
+    // -------------------------------------------------
 
-        JPanel filter =
-                new JPanel(
-                        new GridBagLayout()
+    private JPanel createHero() {
+
+        RoundedPanel hero =
+                new RoundedPanel(
+                        32,
+                        HERO,
+                        BORDER
                 );
 
-        filter.setBackground(
-                lightBackground
+        hero.setLayout(
+                new GridBagLayout()
+        );
+
+        // Increased height so buttons are fully visible
+        hero.setMaximumSize(
+                new Dimension(
+                        Integer.MAX_VALUE,
+                        440
+                )
+        );
+
+        hero.setPreferredSize(
+                new Dimension(
+                        1100,
+                        440
+                )
+        );
+
+        hero.setMinimumSize(
+                new Dimension(
+                        900,
+                        440
+                )
+        );
+
+        hero.setBorder(
+                new EmptyBorder(
+                        42,
+                        55,
+                        42,
+                        55
+                )
+        );
+
+        GridBagConstraints gbc =
+                new GridBagConstraints();
+
+        gbc.fill =
+                GridBagConstraints.BOTH;
+
+        gbc.weighty =
+                1;
+
+        // Left side
+        JPanel left =
+                new JPanel();
+
+        left.setOpaque(
+                false
+        );
+
+        left.setLayout(
+                new BoxLayout(
+                        left,
+                        BoxLayout.Y_AXIS
+                )
+        );
+
+        JLabel badge =
+                new JLabel(
+                        "  Student-first housing marketplace  "
+                );
+
+        badge.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.BOLD,
+                        13
+                )
+        );
+
+        badge.setForeground(
+                DARK
+        );
+
+        badge.setOpaque(
+                true
+        );
+
+        badge.setBackground(
+                Color.WHITE
+        );
+
+        badge.setBorder(
+                BorderFactory.createCompoundBorder(
+
+                        BorderFactory.createLineBorder(
+                                BORDER
+                        ),
+
+                        new EmptyBorder(
+                                8,
+                                12,
+                                8,
+                                12
+                        )
+                )
+        );
+
+        badge.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        JLabel heroTitle =
+                new JLabel(
+                        "<html>"
+                                + "Find your "
+                                + "<font color='#F0781E'>perfect</font>"
+                                + "<br>"
+                                + "student sublet in Berlin"
+                                + "</html>"
+                );
+
+        heroTitle.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.BOLD,
+                        42
+                )
+        );
+
+        heroTitle.setForeground(
+                DARK
+        );
+
+        heroTitle.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        JLabel description =
+                new JLabel(
+                        "<html>"
+                                + "Browse student sublets across Berlin. "
+                                + "Simple, flexible accommodation<br>"
+                                + "for your semester."
+                                + "</html>"
+                );
+
+        description.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.PLAIN,
+                        17
+                )
+        );
+
+        description.setForeground(
+                MUTED
+        );
+
+        description.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        JPanel actions =
+                new JPanel(
+                        new FlowLayout(
+                                FlowLayout.LEFT,
+                                12,
+                                0
+                        )
+                );
+
+        actions.setOpaque(
+                false
+        );
+
+        actions.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        actions.setMaximumSize(
+                new Dimension(
+                        Integer.MAX_VALUE,
+                        55
+                )
+        );
+
+        RoundedButton browse =
+                new RoundedButton(
+                        "Browse listings  →",
+                        ORANGE,
+                        Color.WHITE
+                );
+
+        RoundedButton post =
+                new RoundedButton(
+                        "Post your room",
+                        Color.WHITE,
+                        DARK
+                );
+
+        post.setBorderColor(
+                BORDER
+        );
+
+        browse.addActionListener(
+                e -> {
+
+                    if (listingsGrid != null) {
+
+                        refreshListings();
+
+                        SwingUtilities.invokeLater(
+                                () ->
+                                        listingsGrid
+                                                .scrollRectToVisible(
+                                                        new Rectangle(
+                                                                0,
+                                                                0,
+                                                                1,
+                                                                1
+                                                        )
+                                                )
+                        );
+                    }
+                }
+        );
+
+        post.addActionListener(
+                e ->
+                        cardLayout.show(
+                                pagesPanel,
+                                "LIST_ROOM"
+                        )
+        );
+
+        actions.add(
+                browse
+        );
+
+        actions.add(
+                post
+        );
+
+        left.add(
+                badge
+        );
+
+        left.add(
+                Box.createVerticalStrut(
+                        22
+                )
+        );
+
+        left.add(
+                heroTitle
+        );
+
+        left.add(
+                Box.createVerticalStrut(
+                        18
+                )
+        );
+
+        left.add(
+                description
+        );
+
+        left.add(
+                Box.createVerticalStrut(
+                        24
+                )
+        );
+
+        left.add(
+                actions
+        );
+
+        // Right side
+        RoundedPanel featureCard =
+                new RoundedPanel(
+                        28,
+                        Color.WHITE,
+                        BORDER
+                );
+
+        featureCard.setLayout(
+                new BoxLayout(
+                        featureCard,
+                        BoxLayout.Y_AXIS
+                )
+        );
+
+        featureCard.setBorder(
+                new EmptyBorder(
+                        30,
+                        30,
+                        30,
+                        30
+                )
+        );
+
+        JLabel featureTitle =
+                new JLabel(
+                        "Simple student sublets"
+                );
+
+        featureTitle.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.BOLD,
+                        20
+                )
+        );
+
+        featureTitle.setForeground(
+                DARK
+        );
+
+        featureTitle.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        featureCard.add(
+                featureTitle
+        );
+
+        featureCard.add(
+                Box.createVerticalStrut(
+                        22
+                )
+        );
+
+        featureCard.add(
+                createFeature(
+                        "✓",
+                        "Berlin-focused listings"
+                )
+        );
+
+        featureCard.add(
+                Box.createVerticalStrut(
+                        16
+                )
+        );
+
+        featureCard.add(
+                createFeature(
+                        "✓",
+                        "Student-created accounts"
+                )
+        );
+
+        featureCard.add(
+                Box.createVerticalStrut(
+                        16
+                )
+        );
+
+        featureCard.add(
+                createFeature(
+                        "✓",
+                        "Flexible availability dates"
+                )
+        );
+
+        featureCard.add(
+                Box.createVerticalStrut(
+                        16
+                )
+        );
+
+        featureCard.add(
+                createFeature(
+                        "✓",
+                        "Direct sublet applications"
+                )
+        );
+
+        gbc.gridx =
+                0;
+
+        gbc.gridy =
+                0;
+
+        gbc.weightx =
+                0.66;
+
+        gbc.insets =
+                new Insets(
+                        0,
+                        0,
+                        0,
+                        35
+                );
+
+        hero.add(
+                left,
+                gbc
+        );
+
+        gbc.gridx =
+                1;
+
+        gbc.weightx =
+                0.34;
+
+        gbc.insets =
+                new Insets(
+                        0,
+                        0,
+                        0,
+                        0
+                );
+
+        hero.add(
+                featureCard,
+                gbc
+        );
+
+        return hero;
+    }
+
+    private JPanel createFeature(
+            String icon,
+            String text) {
+
+        JPanel panel =
+                new JPanel(
+                        new FlowLayout(
+                                FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
+
+        panel.setOpaque(
+                false
+        );
+
+        panel.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        JLabel check =
+                new JLabel(
+                        icon
+                );
+
+        check.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.BOLD,
+                        18
+                )
+        );
+
+        check.setForeground(
+                ORANGE
+        );
+
+        JLabel label =
+                new JLabel(
+                        text
+                );
+
+        label.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.PLAIN,
+                        15
+                )
+        );
+
+        label.setForeground(
+                MUTED
+        );
+
+        panel.add(
+                check
+        );
+
+        panel.add(
+                label
+        );
+
+        return panel;
+    }
+
+    // -------------------------------------------------
+    // FILTERS
+    // -------------------------------------------------
+
+    private JPanel createFilterPanel() {
+
+        RoundedPanel filter =
+                new RoundedPanel(
+                        28,
+                        Color.WHITE,
+                        BORDER
+                );
+
+        filter.setLayout(
+                new BoxLayout(
+                        filter,
+                        BoxLayout.Y_AXIS
+                )
         );
 
         filter.setBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(
-                                new Color(
-                                        225,
-                                        225,
-                                        225
-                                )
-                        ),
-                        BorderFactory.createEmptyBorder(
-                                20,
-                                20,
-                                20,
-                                20
-                        )
+                new EmptyBorder(
+                        28,
+                        32,
+                        28,
+                        32
                 )
         );
 
         filter.setMaximumSize(
                 new Dimension(
                         Integer.MAX_VALUE,
-                        200
+                        300
                 )
         );
 
-        filter.setAlignmentX(
-                Component.LEFT_ALIGNMENT
-        );
-
-        GridBagConstraints gbc =
-                new GridBagConstraints();
-
-        gbc.insets =
-                new Insets(
-                        6,
-                        8,
-                        6,
-                        8
+        JPanel heading =
+                new JPanel(
+                        new BorderLayout()
                 );
 
-        gbc.fill =
-                GridBagConstraints.HORIZONTAL;
+        heading.setOpaque(
+                false
+        );
 
-        gbc.weightx = 1;
+        JLabel title =
+                new JLabel(
+                        "Where are you looking?"
+                );
+
+        title.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.BOLD,
+                        21
+                )
+        );
+
+        title.setForeground(
+                DARK
+        );
+
+        JLabel helper =
+                new JLabel(
+                        "Choose your Berlin location and optional filters"
+                );
+
+        helper.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.PLAIN,
+                        13
+                )
+        );
+
+        helper.setForeground(
+                MUTED
+        );
+
+        JPanel headingText =
+                new JPanel();
+
+        headingText.setOpaque(
+                false
+        );
+
+        headingText.setLayout(
+                new BoxLayout(
+                        headingText,
+                        BoxLayout.Y_AXIS
+                )
+        );
+
+        headingText.add(
+                title
+        );
+
+        headingText.add(
+                helper
+        );
+
+        heading.add(
+                headingText,
+                BorderLayout.WEST
+        );
+
+        filter.add(
+                heading
+        );
+
+        filter.add(
+                Box.createVerticalStrut(
+                        24
+                )
+        );
+
+        JPanel firstRow =
+                new JPanel(
+                        new GridLayout(
+                                1,
+                                3,
+                                18,
+                                0
+                        )
+                );
+
+        firstRow.setOpaque(
+                false
+        );
 
         boroughBox =
                 new JComboBox<>();
@@ -433,7 +1219,9 @@ public class MarketplaceDashboard extends JFrame {
         for (String borough :
                 BerlinLocations.getBoroughs()) {
 
-            boroughBox.addItem(borough);
+            boroughBox.addItem(
+                    borough
+            );
         }
 
         neighbourhoodBox =
@@ -446,192 +1234,263 @@ public class MarketplaceDashboard extends JFrame {
         priceField =
                 new JTextField();
 
+        firstRow.add(
+                createInputGroup(
+                        "Borough",
+                        boroughBox
+                )
+        );
+
+        firstRow.add(
+                createInputGroup(
+                        "Neighbourhood",
+                        neighbourhoodBox
+                )
+        );
+
+        firstRow.add(
+                createInputGroup(
+                        "Maximum Price (€)",
+                        priceField
+                )
+        );
+
+        filter.add(
+                firstRow
+        );
+
+        filter.add(
+                Box.createVerticalStrut(
+                        18
+                )
+        );
+
+        JPanel secondRow =
+                new JPanel(
+                        new GridLayout(
+                                1,
+                                3,
+                                18,
+                                0
+                        )
+                );
+
+        secondRow.setOpaque(
+                false
+        );
+
         startDateField =
                 new JTextField();
 
         endDateField =
                 new JTextField();
 
-        addFilterField(
-                filter,
-                gbc,
-                0,
-                0,
-                "Borough",
-                boroughBox
+        secondRow.add(
+                createInputGroup(
+                        "Available From (YYYY-MM-DD)",
+                        startDateField
+                )
         );
 
-        addFilterField(
-                filter,
-                gbc,
-                1,
-                0,
-                "Neighbourhood",
-                neighbourhoodBox
+        secondRow.add(
+                createInputGroup(
+                        "Available Until (YYYY-MM-DD)",
+                        endDateField
+                )
         );
 
-        addFilterField(
-                filter,
-                gbc,
-                2,
-                0,
-                "Maximum Price (€)",
-                priceField
-        );
-
-        addFilterField(
-                filter,
-                gbc,
-                0,
-                1,
-                "Available From",
-                startDateField
-        );
-
-        addFilterField(
-                filter,
-                gbc,
-                1,
-                1,
-                "Available Until",
-                endDateField
-        );
-
-        JPanel buttonPanel =
+        JPanel buttons =
                 new JPanel(
                         new FlowLayout(
                                 FlowLayout.LEFT,
-                                8,
-                                20
+                                10,
+                                22
                         )
                 );
 
-        buttonPanel.setBackground(
-                lightBackground
-        );
-
-        JButton filterButton =
-                new JButton(
-                        "Apply Filters"
-                );
-
-        JButton clearButton =
-                new JButton(
-                        "Clear"
-                );
-
-        filterButton.setBackground(
-                orange
-        );
-
-        filterButton.setForeground(
-                Color.WHITE
-        );
-
-        filterButton.setFocusPainted(
+        buttons.setOpaque(
                 false
         );
 
-        clearButton.setFocusPainted(
-                false
+        RoundedButton apply =
+                new RoundedButton(
+                        "Apply Filters",
+                        ORANGE,
+                        Color.WHITE
+                );
+
+        RoundedButton clear =
+                new RoundedButton(
+                        "Reset",
+                        Color.WHITE,
+                        DARK
+                );
+
+        clear.setBorderColor(
+                BORDER
         );
 
-        filterButton.addActionListener(
+        apply.addActionListener(
                 e -> filterListings()
         );
 
-        clearButton.addActionListener(e -> {
+        clear.addActionListener(
+                e -> {
 
-            boroughBox.setSelectedIndex(0);
+                    boroughBox.setSelectedIndex(
+                            0
+                    );
 
-            neighbourhoodBox.removeAllItems();
+                    neighbourhoodBox
+                            .removeAllItems();
 
-            neighbourhoodBox.addItem(
-                    "All Neighbourhoods"
-            );
+                    neighbourhoodBox.addItem(
+                            "All Neighbourhoods"
+                    );
 
-            priceField.setText("");
-            startDateField.setText("");
-            endDateField.setText("");
+                    priceField.setText(
+                            ""
+                    );
 
-            refreshListings();
-        });
+                    startDateField.setText(
+                            ""
+                    );
 
-        buttonPanel.add(filterButton);
-        buttonPanel.add(clearButton);
+                    endDateField.setText(
+                            ""
+                    );
 
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-
-        filter.add(
-                buttonPanel,
-                gbc
+                    refreshListings();
+                }
         );
 
-        boroughBox.addActionListener(e ->
-                updateFilterNeighbourhoods()
+        buttons.add(
+                apply
+        );
+
+        buttons.add(
+                clear
+        );
+
+        secondRow.add(
+                buttons
+        );
+
+        filter.add(
+                secondRow
+        );
+
+        boroughBox.addActionListener(
+                e ->
+                        updateFilterNeighbourhoods()
         );
 
         return filter;
     }
 
-    private void addFilterField(
-            JPanel panel,
-            GridBagConstraints gbc,
-            int column,
-            int row,
+    private JPanel createInputGroup(
             String label,
-            JComponent component) {
+            JComponent input) {
 
-        JPanel fieldPanel =
+        JPanel panel =
                 new JPanel();
 
-        fieldPanel.setLayout(
+        panel.setOpaque(
+                false
+        );
+
+        panel.setLayout(
                 new BoxLayout(
-                        fieldPanel,
+                        panel,
                         BoxLayout.Y_AXIS
                 )
         );
 
-        fieldPanel.setBackground(
-                lightBackground
+        JLabel fieldLabel =
+                new JLabel(
+                        label
+                );
+
+        fieldLabel.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.BOLD,
+                        13
+                )
         );
 
-        JLabel fieldLabel =
-                new JLabel(label);
+        fieldLabel.setForeground(
+                DARK
+        );
 
         fieldLabel.setAlignmentX(
                 Component.LEFT_ALIGNMENT
         );
 
-        component.setMaximumSize(
-                new Dimension(
-                        Integer.MAX_VALUE,
-                        32
-                )
+        styleInput(
+                input
         );
-
-        component.setPreferredSize(
-                new Dimension(
-                        220,
-                        32
-                )
-        );
-
-        fieldPanel.add(fieldLabel);
-
-        fieldPanel.add(
-                Box.createVerticalStrut(4)
-        );
-
-        fieldPanel.add(component);
-
-        gbc.gridx = column;
-        gbc.gridy = row;
 
         panel.add(
-                fieldPanel,
-                gbc
+                fieldLabel
+        );
+
+        panel.add(
+                Box.createVerticalStrut(
+                        7
+                )
+        );
+
+        panel.add(
+                input
+        );
+
+        return panel;
+    }
+
+    private void styleInput(
+            JComponent input) {
+
+        input.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.PLAIN,
+                        14
+                )
+        );
+
+        input.setBackground(
+                Color.WHITE
+        );
+
+        input.setPreferredSize(
+                new Dimension(
+                        230,
+                        42
+                )
+        );
+
+        input.setMaximumSize(
+                new Dimension(
+                        Integer.MAX_VALUE,
+                        42
+                )
+        );
+
+        input.setBorder(
+                BorderFactory.createCompoundBorder(
+
+                        BorderFactory.createLineBorder(
+                                BORDER
+                        ),
+
+                        new EmptyBorder(
+                                8,
+                                12,
+                                8,
+                                12
+                        )
+                )
         );
     }
 
@@ -650,8 +1509,8 @@ public class MarketplaceDashboard extends JFrame {
 
         if (borough == null
                 || borough.equals(
-                        "All Boroughs"
-                )) {
+                "All Boroughs"
+        )) {
 
             return;
         }
@@ -668,9 +1527,9 @@ public class MarketplaceDashboard extends JFrame {
         }
     }
 
-    // ---------------------------------------------------------
-    // LISTING CARDS
-    // ---------------------------------------------------------
+    // -------------------------------------------------
+    // LISTINGS
+    // -------------------------------------------------
 
     private void refreshListings() {
 
@@ -678,37 +1537,168 @@ public class MarketplaceDashboard extends JFrame {
             return;
         }
 
-        listingsGrid.removeAll();
-
-        int count = 0;
+        List<Listing> visibleListings =
+                new ArrayList<>();
 
         for (Listing listing :
                 DataStore.listings) {
 
             if (listing.isAvailable()) {
 
-                listingsGrid.add(
-                        createListingCard(
-                                listing
-                        )
+                visibleListings.add(
+                        listing
                 );
-
-                count++;
             }
         }
 
-        if (count == 0) {
+        displayListingCards(
+                visibleListings,
+                "No listings are currently available."
+        );
+    }
 
-            JLabel none =
+    private void displayListingCards(
+            List<Listing> listings,
+            String emptyMessage) {
+
+        listingsGrid.removeAll();
+
+        listingCountLabel.setText(
+                listings.size()
+                        + (
+                        listings.size() == 1
+                                ? " listing"
+                                : " listings"
+                )
+        );
+
+        GridBagConstraints gbc =
+                new GridBagConstraints();
+
+        gbc.anchor =
+                GridBagConstraints.NORTHWEST;
+
+        gbc.insets =
+                new Insets(
+                        0,
+                        0,
+                        22,
+                        22
+                );
+
+        if (listings.isEmpty()) {
+
+            JLabel empty =
                     new JLabel(
-                            "No listings are currently available."
+                            emptyMessage
                     );
 
-            none.setForeground(
-                    Color.GRAY
+            empty.setFont(
+                    new Font(
+                            "SansSerif",
+                            Font.PLAIN,
+                            16
+                    )
             );
 
-            listingsGrid.add(none);
+            empty.setForeground(
+                    MUTED
+            );
+
+            gbc.gridx =
+                    0;
+
+            gbc.gridy =
+                    0;
+
+            listingsGrid.add(
+                    empty,
+                    gbc
+            );
+
+        } else {
+
+            int column =
+                    0;
+
+            int row =
+                    0;
+
+            for (Listing listing :
+                    listings) {
+
+                gbc.gridx =
+                        column;
+
+                gbc.gridy =
+                        row;
+
+                gbc.weightx =
+                        0;
+
+                gbc.weighty =
+                        0;
+
+                gbc.fill =
+                        GridBagConstraints.NONE;
+
+                listingsGrid.add(
+                        createListingCard(
+                                listing
+                        ),
+                        gbc
+                );
+
+                column++;
+
+                if (column == 3) {
+
+                    column =
+                            0;
+
+                    row++;
+                }
+            }
+
+            // Extra horizontal space stays empty
+            // instead of stretching the cards
+            gbc.gridx =
+                    3;
+
+            gbc.gridy =
+                    0;
+
+            gbc.weightx =
+                    1;
+
+            gbc.fill =
+                    GridBagConstraints.HORIZONTAL;
+
+            listingsGrid.add(
+                    Box.createHorizontalGlue(),
+                    gbc
+            );
+
+            // Keep cards aligned at the top
+            gbc.gridx =
+                    0;
+
+            gbc.gridy =
+                    row + 1;
+
+            gbc.weightx =
+                    0;
+
+            gbc.weighty =
+                    1;
+
+            gbc.fill =
+                    GridBagConstraints.VERTICAL;
+
+            listingsGrid.add(
+                    Box.createVerticalGlue(),
+                    gbc
+            );
         }
 
         listingsGrid.revalidate();
@@ -718,75 +1708,69 @@ public class MarketplaceDashboard extends JFrame {
     private JPanel createListingCard(
             Listing listing) {
 
-        JPanel card =
-                new JPanel(
-                        new BorderLayout()
+        RoundedPanel card =
+                new RoundedPanel(
+                        22,
+                        Color.WHITE,
+                        BORDER
+                );
+
+        card.setLayout(
+                new BorderLayout()
+        );
+
+        // Smaller card, but still large enough
+        // to look like a property marketplace card
+        Dimension cardSize =
+                new Dimension(
+                        305,
+                        360
                 );
 
         card.setPreferredSize(
-                new Dimension(
-                        260,
-                        330
-                )
+                cardSize
         );
 
-        card.setBackground(
-                Color.WHITE
+        card.setMinimumSize(
+                cardSize
         );
 
-        card.setBorder(
-                BorderFactory.createLineBorder(
-                        new Color(
-                                220,
-                                220,
-                                220
-                        )
-                )
+        card.setMaximumSize(
+                cardSize
         );
 
-        JLabel imageLabel =
+        JLabel image =
                 createListingImage(
-                        listing
+                        listing,
+                        305,
+                        175
                 );
 
         card.add(
-                imageLabel,
+                image,
                 BorderLayout.NORTH
         );
 
-        JPanel details =
+        JPanel information =
                 new JPanel();
 
-        details.setLayout(
+        information.setOpaque(
+                false
+        );
+
+        information.setLayout(
                 new BoxLayout(
-                        details,
+                        information,
                         BoxLayout.Y_AXIS
                 )
         );
 
-        details.setBackground(
-                Color.WHITE
-        );
-
-        details.setBorder(
-                BorderFactory.createEmptyBorder(
-                        12,
+        information.setBorder(
+                new EmptyBorder(
                         14,
-                        12,
-                        14
-                )
-        );
-
-        JLabel title =
-                new JLabel(
-                        listing.getTitle()
-                );
-
-        title.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        17
+                        18,
+                        16,
+                        18
                 )
         );
 
@@ -797,8 +1781,62 @@ public class MarketplaceDashboard extends JFrame {
                                 + listing.getBorough()
                 );
 
+        location.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.BOLD,
+                        12
+                )
+        );
+
         location.setForeground(
-                Color.DARK_GRAY
+                ORANGE
+        );
+
+        location.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        JLabel title =
+                new JLabel(
+                        listing.getTitle()
+                );
+
+        title.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.BOLD,
+                        17
+                )
+        );
+
+        title.setForeground(
+                DARK
+        );
+
+        title.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        JLabel room =
+                new JLabel(
+                        listing.getRoomType()
+                );
+
+        room.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.PLAIN,
+                        13
+                )
+        );
+
+        room.setForeground(
+                MUTED
+        );
+
+        room.setAlignmentX(
+                Component.LEFT_ALIGNMENT
         );
 
         JLabel price =
@@ -810,81 +1848,85 @@ public class MarketplaceDashboard extends JFrame {
 
         price.setFont(
                 new Font(
-                        "Arial",
+                        "SansSerif",
                         Font.BOLD,
-                        15
+                        16
                 )
         );
 
-        JLabel roomType =
-                new JLabel(
-                        listing.getRoomType()
-                );
-
-        roomType.setForeground(
-                Color.GRAY
+        price.setForeground(
+                DARK
         );
 
-        JButton detailsButton =
-                new JButton(
-                        "View Details"
-                );
-
-        detailsButton.setBackground(
-                orange
-        );
-
-        detailsButton.setForeground(
-                Color.WHITE
-        );
-
-        detailsButton.setFocusPainted(
-                false
-        );
-
-        detailsButton.setAlignmentX(
+        price.setAlignmentX(
                 Component.LEFT_ALIGNMENT
         );
 
-        detailsButton.addActionListener(
+        RoundedButton details =
+                new RoundedButton(
+                        "View Details",
+                        ORANGE,
+                        Color.WHITE
+                );
+
+        details.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        details.addActionListener(
                 e ->
                         showListingDetails(
                                 listing
                         )
         );
 
-        details.add(title);
-
-        details.add(
-                Box.createVerticalStrut(7)
+        // Everything is deliberately aligned left
+        information.add(
+                location
         );
 
-        details.add(location);
-
-        details.add(
-                Box.createVerticalStrut(5)
+        information.add(
+                Box.createVerticalStrut(
+                        6
+                )
         );
 
-        details.add(price);
-
-        details.add(
-                Box.createVerticalStrut(5)
+        information.add(
+                title
         );
 
-        details.add(roomType);
-
-        details.add(
-                Box.createVerticalGlue()
+        information.add(
+                Box.createVerticalStrut(
+                        5
+                )
         );
 
-        details.add(
-                Box.createVerticalStrut(12)
+        information.add(
+                room
         );
 
-        details.add(detailsButton);
+        information.add(
+                Box.createVerticalStrut(
+                        10
+                )
+        );
+
+        information.add(
+                price
+        );
+
+        information.add(
+                Box.createVerticalStrut(
+                        12
+                )
+        );
+
+        information.add(
+                details
+        );
 
         card.add(
-                details,
+                information,
                 BorderLayout.CENTER
         );
 
@@ -892,7 +1934,9 @@ public class MarketplaceDashboard extends JFrame {
     }
 
     private JLabel createListingImage(
-            Listing listing) {
+            Listing listing,
+            int width,
+            int height) {
 
         JLabel imageLabel =
                 new JLabel(
@@ -902,18 +1946,20 @@ public class MarketplaceDashboard extends JFrame {
 
         imageLabel.setPreferredSize(
                 new Dimension(
-                        260,
-                        170
+                        width,
+                        height
                 )
         );
 
-        imageLabel.setOpaque(true);
+        imageLabel.setOpaque(
+                true
+        );
 
         imageLabel.setBackground(
                 new Color(
-                        235,
-                        235,
-                        235
+                        240,
+                        238,
+                        234
                 )
         );
 
@@ -922,22 +1968,24 @@ public class MarketplaceDashboard extends JFrame {
 
             File file =
                     new File(
-                            listing.getImagePath()
+                            listing
+                                    .getImagePath()
                     );
 
             if (file.exists()) {
 
-                ImageIcon icon =
+                ImageIcon original =
                         new ImageIcon(
                                 listing
                                         .getImagePath()
                         );
 
                 Image scaled =
-                        icon.getImage()
+                        original
+                                .getImage()
                                 .getScaledInstance(
-                                        260,
-                                        170,
+                                        width,
+                                        height,
                                         Image.SCALE_SMOOTH
                                 );
 
@@ -952,19 +2000,27 @@ public class MarketplaceDashboard extends JFrame {
         }
 
         imageLabel.setText(
-                "No Image Available"
+                "No image available"
         );
 
         imageLabel.setForeground(
-                Color.GRAY
+                MUTED
+        );
+
+        imageLabel.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.PLAIN,
+                        13
+                )
         );
 
         return imageLabel;
     }
 
-    // ---------------------------------------------------------
-    // FILTER LISTINGS
-    // ---------------------------------------------------------
+    // -------------------------------------------------
+    // FILTER LOGIC
+    // -------------------------------------------------
 
     private void filterListings() {
 
@@ -995,22 +2051,26 @@ public class MarketplaceDashboard extends JFrame {
 
         try {
 
-            Double maximumPrice = null;
+            Double maxPrice =
+                    null;
 
-            LocalDate startDate = null;
-            LocalDate endDate = null;
+            LocalDate startDate =
+                    null;
+
+            LocalDate endDate =
+                    null;
 
             if (Validator.notEmpty(
                     priceText
             )) {
 
-                maximumPrice =
+                maxPrice =
                         Double.parseDouble(
                                 priceText
                         );
 
                 if (!Validator.validPrice(
-                        maximumPrice
+                        maxPrice
                 )) {
 
                     JOptionPane.showMessageDialog(
@@ -1070,9 +2130,8 @@ public class MarketplaceDashboard extends JFrame {
                 }
             }
 
-            listingsGrid.removeAll();
-
-            int matches = 0;
+            List<Listing> matches =
+                    new ArrayList<>();
 
             for (Listing listing :
                     DataStore.listings) {
@@ -1082,9 +2141,10 @@ public class MarketplaceDashboard extends JFrame {
                 }
 
                 boolean locationMatches =
-                        borough.equals(
-                                "All Boroughs"
-                        )
+                        "All Boroughs"
+                                .equals(
+                                        borough
+                                )
 
                                 || listing
                                 .getBorough()
@@ -1092,9 +2152,10 @@ public class MarketplaceDashboard extends JFrame {
                                         borough
                                 );
 
-                if (!neighbourhood.equals(
-                        "All Neighbourhoods"
-                )) {
+                if (!"All Neighbourhoods"
+                        .equals(
+                                neighbourhood
+                        )) {
 
                     locationMatches =
                             locationMatches
@@ -1107,53 +2168,46 @@ public class MarketplaceDashboard extends JFrame {
                 }
 
                 boolean priceMatches =
-                        maximumPrice == null
+                        maxPrice == null
 
                                 || listing
                                 .getPrice()
-                                <= maximumPrice;
+                                <= maxPrice;
 
                 boolean datesMatch =
                         startDate == null
 
-                                || (!startDate.isBefore(
-                                listing
-                                        .getStartDate()
-                        )
+                                || (
+                                !startDate
+                                        .isBefore(
+                                                listing
+                                                        .getStartDate()
+                                        )
 
-                                && !endDate.isAfter(
-                                listing
-                                        .getEndDate()
-                        ));
+                                        && !endDate
+                                        .isAfter(
+                                                listing
+                                                        .getEndDate()
+                                        )
+                        );
 
                 if (locationMatches
                         && priceMatches
                         && datesMatch) {
 
-                    listingsGrid.add(
-                            createListingCard(
-                                    listing
-                            )
+                    matches.add(
+                            listing
                     );
-
-                    matches++;
                 }
             }
 
-            if (matches == 0) {
-
-                listingsGrid.add(
-                        new JLabel(
-                                "No listings match these filters."
-                        )
-                );
-            }
-
-            listingsGrid.revalidate();
-            listingsGrid.repaint();
+            displayListingCards(
+                    matches,
+                    "No listings match the selected filters."
+            );
 
         } catch (
-                NumberFormatException ex) {
+                NumberFormatException e) {
 
             JOptionPane.showMessageDialog(
                     this,
@@ -1161,7 +2215,7 @@ public class MarketplaceDashboard extends JFrame {
             );
 
         } catch (
-                DateTimeParseException ex) {
+                DateTimeParseException e) {
 
             JOptionPane.showMessageDialog(
                     this,
@@ -1170,512 +2224,9 @@ public class MarketplaceDashboard extends JFrame {
         }
     }
 
-    // ---------------------------------------------------------
-    // LIST A ROOM
-    // ---------------------------------------------------------
-
-  private JScrollPane createListRoomPage() {
-
-    JPanel page = new JPanel();
-
-    page.setLayout(
-            new BoxLayout(
-                    page,
-                    BoxLayout.Y_AXIS
-            )
-    );
-
-    page.setBackground(Color.WHITE);
-
-    page.setBorder(
-            BorderFactory.createEmptyBorder(
-                    35,
-                    100,
-                    50,
-                    100
-            )
-    );
-
-    JLabel title =
-            new JLabel("List your room");
-
-    title.setFont(
-            new Font(
-                    "Arial",
-                    Font.BOLD,
-                    30
-            )
-    );
-
-    title.setAlignmentX(
-            Component.LEFT_ALIGNMENT
-    );
-
-    JLabel text =
-            new JLabel(
-                    "Have a room available? Create a listing for students in Berlin."
-            );
-
-    text.setForeground(Color.GRAY);
-
-    text.setAlignmentX(
-            Component.LEFT_ALIGNMENT
-    );
-
-    JButton createButton =
-            new JButton(
-                    "Create New Listing"
-            );
-
-    createButton.setBackground(orange);
-    createButton.setForeground(Color.WHITE);
-    createButton.setFocusPainted(false);
-
-    createButton.setPreferredSize(
-            new Dimension(
-                    220,
-                    42
-            )
-    );
-
-    createButton.setMaximumSize(
-            new Dimension(
-                    220,
-                    42
-            )
-    );
-
-    createButton.setAlignmentX(
-            Component.LEFT_ALIGNMENT
-    );
-
-    createButton.addActionListener(e -> {
-
-        /*
-         * Every normal user can act as a Sublettor.
-         * We keep the same user ID so listings remain
-         * connected to the correct account.
-         */
-        Lister listingUser =
-                new Lister(
-                        currentUser.getUserId(),
-                        currentUser.getName(),
-                        currentUser.getEmail(),
-                        currentUser.getPassword()
-                );
-
-        new ListerDashboard(
-                listingUser
-        );
-    });
-
-    page.add(title);
-
-    page.add(
-            Box.createVerticalStrut(8)
-    );
-
-    page.add(text);
-
-    page.add(
-            Box.createVerticalStrut(25)
-    );
-
-    page.add(createButton);
-
-    JScrollPane scrollPane =
-            new JScrollPane(page);
-
-    scrollPane.setBorder(null);
-
-    scrollPane.getVerticalScrollBar()
-            .setUnitIncrement(18);
-
-    return scrollPane;
-}
-
-    // ---------------------------------------------------------
-    // APPLICATIONS PAGE
-    // ---------------------------------------------------------
-
-    private JPanel applicationsContent;
-
-    private JScrollPane createApplicationsPage() {
-
-        applicationsContent =
-                new JPanel();
-
-        applicationsContent.setLayout(
-                new BoxLayout(
-                        applicationsContent,
-                        BoxLayout.Y_AXIS
-                )
-        );
-
-        applicationsContent.setBackground(
-                Color.WHITE
-        );
-
-        applicationsContent.setBorder(
-                BorderFactory.createEmptyBorder(
-                        30,
-                        50,
-                        40,
-                        50
-                )
-        );
-
-        JScrollPane scrollPane =
-                new JScrollPane(
-                        applicationsContent
-                );
-
-        scrollPane.setBorder(null);
-
-        scrollPane.getVerticalScrollBar()
-                .setUnitIncrement(18);
-
-        return scrollPane;
-    }
-
-    private void refreshApplicationsPage() {
-
-        applicationsContent.removeAll();
-
-        JLabel heading =
-                new JLabel(
-                        "Applications"
-                );
-
-        heading.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        28
-                )
-        );
-
-        applicationsContent.add(
-                heading
-        );
-
-        applicationsContent.add(
-                Box.createVerticalStrut(
-                        20
-                )
-        );
-
-        if (currentUser
-                instanceof Student) {
-
-            Student student =
-                    (Student)
-                            currentUser;
-
-            int count = 0;
-
-            for (Application application :
-                    DataStore.applications) {
-
-                if (application
-                        .getStudentId()
-
-                        != student
-                        .getUserId()) {
-
-                    continue;
-                }
-
-                Listing listing =
-                        findListing(
-                                application
-                                        .getListingId()
-                        );
-
-                if (listing == null) {
-                    continue;
-                }
-
-                JLabel row =
-                        new JLabel(
-                                listing.getTitle()
-                                        + " — "
-                                        + application
-                                        .getStatus()
-                        );
-
-                row.setFont(
-                        new Font(
-                                "Arial",
-                                Font.PLAIN,
-                                16
-                        )
-                );
-
-                applicationsContent.add(
-                        row
-                );
-
-                applicationsContent.add(
-                        Box.createVerticalStrut(
-                                12
-                        )
-                );
-
-                count++;
-            }
-
-            if (count == 0) {
-
-                applicationsContent.add(
-                        new JLabel(
-                                "You have not submitted any applications."
-                        )
-                );
-            }
-
-        } else {
-
-            applicationsContent.add(
-                    new JLabel(
-                            "Application management for Listers will be connected here."
-                    )
-            );
-        }
-
-        applicationsContent.revalidate();
-        applicationsContent.repaint();
-    }
-
-    // ---------------------------------------------------------
-    // MY LISTINGS PAGE
-    // ---------------------------------------------------------
-
-    private JPanel myListingsContent;
-
-    private JScrollPane createMyListingsPage() {
-
-        myListingsContent =
-                new JPanel();
-
-        myListingsContent.setLayout(
-                new BoxLayout(
-                        myListingsContent,
-                        BoxLayout.Y_AXIS
-                )
-        );
-
-        myListingsContent.setBackground(
-                Color.WHITE
-        );
-
-        myListingsContent.setBorder(
-                BorderFactory.createEmptyBorder(
-                        30,
-                        50,
-                        40,
-                        50
-                )
-        );
-
-        JScrollPane scrollPane =
-                new JScrollPane(
-                        myListingsContent
-                );
-
-        scrollPane.setBorder(null);
-
-        scrollPane.getVerticalScrollBar()
-                .setUnitIncrement(18);
-
-        return scrollPane;
-    }
-
- private void refreshMyListingsPage() {
-
-    myListingsContent.removeAll();
-
-    JLabel heading =
-            new JLabel(
-                    "My Listings"
-            );
-
-    heading.setFont(
-            new Font(
-                    "Arial",
-                    Font.BOLD,
-                    28
-            )
-    );
-
-    heading.setAlignmentX(
-            Component.LEFT_ALIGNMENT
-    );
-
-    myListingsContent.add(
-            heading
-    );
-
-    myListingsContent.add(
-            Box.createVerticalStrut(20)
-    );
-
-    int count = 0;
-
-    for (Listing listing :
-            DataStore.listings) {
-
-        // Only show listings created by this user
-        if (listing.getListerId()
-                != currentUser.getUserId()) {
-
-            continue;
-        }
-
-        JPanel row =
-                new JPanel(
-                        new BorderLayout(
-                                15,
-                                0
-                        )
-                );
-
-        row.setBackground(Color.WHITE);
-
-        row.setMaximumSize(
-                new Dimension(
-                        900,
-                        130
-                )
-        );
-
-        row.setAlignmentX(
-                Component.LEFT_ALIGNMENT
-        );
-
-        row.setBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(
-                                new Color(
-                                        220,
-                                        220,
-                                        220
-                                )
-                        ),
-
-                        BorderFactory.createEmptyBorder(
-                                12,
-                                12,
-                                12,
-                                12
-                        )
-                )
-        );
-
-        JLabel imageLabel =
-                createListingImage(
-                        listing
-                );
-
-        imageLabel.setPreferredSize(
-                new Dimension(
-                        150,
-                        100
-                )
-        );
-
-        JPanel details =
-                new JPanel();
-
-        details.setLayout(
-                new BoxLayout(
-                        details,
-                        BoxLayout.Y_AXIS
-                )
-        );
-
-        details.setBackground(
-                Color.WHITE
-        );
-
-        JLabel titleLabel =
-                new JLabel(
-                        listing.getTitle()
-                );
-
-        titleLabel.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        17
-                )
-        );
-
-        JLabel locationLabel =
-                new JLabel(
-                        listing.getNeighbourhood()
-                                + ", "
-                                + listing.getBorough()
-                );
-
-        JLabel priceLabel =
-                new JLabel(
-                        "€"
-                                + listing.getPrice()
-                                + " / month"
-                );
-
-        details.add(titleLabel);
-
-        details.add(
-                Box.createVerticalStrut(5)
-        );
-
-        details.add(locationLabel);
-        details.add(priceLabel);
-
-        row.add(
-                imageLabel,
-                BorderLayout.WEST
-        );
-
-        row.add(
-                details,
-                BorderLayout.CENTER
-        );
-
-        myListingsContent.add(row);
-
-        myListingsContent.add(
-                Box.createVerticalStrut(12)
-        );
-
-        count++;
-    }
-
-    if (count == 0) {
-
-        JLabel message =
-                new JLabel(
-                        "You have not created any listings yet."
-                );
-
-        message.setForeground(
-                Color.GRAY
-        );
-
-        myListingsContent.add(
-                message
-        );
-    }
-
-    myListingsContent.revalidate();
-    myListingsContent.repaint();
-}
-
-    // ---------------------------------------------------------
+    // -------------------------------------------------
     // LISTING DETAILS
-    // ---------------------------------------------------------
+    // -------------------------------------------------
 
     private void showListingDetails(
             Listing listing) {
@@ -1683,22 +2234,21 @@ public class MarketplaceDashboard extends JFrame {
         JPanel panel =
                 new JPanel(
                         new BorderLayout(
-                                10,
-                                10
+                                18,
+                                18
                         )
                 );
 
+        panel.setBackground(
+                Color.WHITE
+        );
+
         JLabel image =
                 createListingImage(
-                        listing
+                        listing,
+                        430,
+                        230
                 );
-
-        image.setPreferredSize(
-                new Dimension(
-                        300,
-                        190
-                )
-        );
 
         panel.add(
                 image,
@@ -1713,59 +2263,46 @@ public class MarketplaceDashboard extends JFrame {
                                 + "</h2>"
 
                                 + "<b>Location:</b> "
-                                + listing
-                                .getNeighbourhood()
+                                + listing.getNeighbourhood()
                                 + ", "
-                                + listing
-                                .getBorough()
+                                + listing.getBorough()
 
-                                + "<br><b>Price:</b> €"
-                                + listing
-                                .getPrice()
+                                + "<br><br><b>Price:</b> €"
+                                + listing.getPrice()
                                 + " per month"
 
                                 + "<br><b>Available:</b> "
-                                + listing
-                                .getStartDate()
+                                + listing.getStartDate()
                                 + " to "
-                                + listing
-                                .getEndDate()
+                                + listing.getEndDate()
 
                                 + "<br><b>Room Type:</b> "
-                                + listing
-                                .getRoomType()
+                                + listing.getRoomType()
 
                                 + "<br><br>"
-                                + listing
-                                .getDescription()
+                                + listing.getDescription()
 
                                 + "</html>"
                 );
+
+        information.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.PLAIN,
+                        14
+                )
+        );
 
         panel.add(
                 information,
                 BorderLayout.CENTER
         );
 
-        Object[] options;
-
-        if (currentUser
-                instanceof Student) {
-
-            options =
-                    new Object[]{
-                            "Apply",
-                            "Report",
-                            "Close"
-                    };
-
-        } else {
-
-            options =
-                    new Object[]{
-                            "Close"
-                    };
-        }
+        Object[] options = {
+                "Apply",
+                "Report",
+                "Close"
+        };
 
         int choice =
                 JOptionPane.showOptionDialog(
@@ -1779,31 +2316,22 @@ public class MarketplaceDashboard extends JFrame {
                         options[0]
                 );
 
-        if (currentUser
-                instanceof Student) {
+        if (choice == 0) {
 
-            if (choice == 0) {
+            applyForListing(
+                    listing
+            );
 
-                applyForListing(
-                        listing
-                );
-            }
+        } else if (choice == 1) {
 
-            if (choice == 1) {
-
-                reportListing(
-                        listing
-                );
-            }
+            reportListing(
+                    listing
+            );
         }
     }
 
     private void applyForListing(
             Listing listing) {
-
-        Student student =
-                (Student)
-                        currentUser;
 
         for (Application application :
                 DataStore.applications) {
@@ -1811,7 +2339,7 @@ public class MarketplaceDashboard extends JFrame {
             if (application
                     .getStudentId()
 
-                    == student
+                    == currentUser
                     .getUserId()
 
                     && application
@@ -1822,7 +2350,7 @@ public class MarketplaceDashboard extends JFrame {
 
                 JOptionPane.showMessageDialog(
                         this,
-                        "You already applied for this listing."
+                        "You have already applied for this listing."
                 );
 
                 return;
@@ -1834,7 +2362,7 @@ public class MarketplaceDashboard extends JFrame {
                         DataStore
                                 .getNextApplicationId(),
 
-                        student
+                        currentUser
                                 .getUserId(),
 
                         listing
@@ -1847,21 +2375,19 @@ public class MarketplaceDashboard extends JFrame {
 
         JOptionPane.showMessageDialog(
                 this,
-                "Application submitted successfully."
+                "Application submitted successfully.\nStatus: Pending"
         );
     }
 
     private void reportListing(
             Listing listing) {
 
-        Student student =
-                (Student)
-                        currentUser;
-
         String reason =
                 JOptionPane.showInputDialog(
                         this,
-                        "Why are you reporting this listing?"
+                        "Why are you reporting this listing?",
+                        "Report Listing",
+                        JOptionPane.WARNING_MESSAGE
                 );
 
         if (reason == null) {
@@ -1886,7 +2412,7 @@ public class MarketplaceDashboard extends JFrame {
             if (report
                     .getStudentId()
 
-                    == student
+                    == currentUser
                     .getUserId()
 
                     && report
@@ -1897,7 +2423,7 @@ public class MarketplaceDashboard extends JFrame {
 
                 JOptionPane.showMessageDialog(
                         this,
-                        "You already reported this listing."
+                        "You have already reported this listing."
                 );
 
                 return;
@@ -1909,7 +2435,7 @@ public class MarketplaceDashboard extends JFrame {
                         DataStore
                                 .getNextReportId(),
 
-                        student
+                        currentUser
                                 .getUserId(),
 
                         listing
@@ -1928,14 +2454,504 @@ public class MarketplaceDashboard extends JFrame {
         );
     }
 
-    // ---------------------------------------------------------
-    // PROFILE
-    // ---------------------------------------------------------
+    // -------------------------------------------------
+    // LIST ROOM
+    // -------------------------------------------------
+
+    private JScrollPane createListRoomPage() {
+
+        JPanel page =
+                createSimplePage(
+                        "Post your room",
+                        "Create a sublet listing and make it available to students in Berlin."
+                );
+
+        RoundedPanel card =
+                new RoundedPanel(
+                        28,
+                        Color.WHITE,
+                        BORDER
+                );
+
+        card.setLayout(
+                new BoxLayout(
+                        card,
+                        BoxLayout.Y_AXIS
+                )
+        );
+
+        card.setBorder(
+                new EmptyBorder(
+                        35,
+                        35,
+                        35,
+                        35
+                )
+        );
+
+        card.setMaximumSize(
+                new Dimension(
+                        650,
+                        230
+                )
+        );
+
+        card.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        JLabel title =
+                new JLabel(
+                        "Have a room available?"
+                );
+
+        title.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.BOLD,
+                        22
+                )
+        );
+
+        title.setForeground(
+                DARK
+        );
+
+        title.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        JLabel description =
+                new JLabel(
+                        "Add the location, price, dates, room type and a picture."
+                );
+
+        description.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.PLAIN,
+                        14
+                )
+        );
+
+        description.setForeground(
+                MUTED
+        );
+
+        description.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        RoundedButton create =
+                new RoundedButton(
+                        "+ Create New Listing",
+                        ORANGE,
+                        Color.WHITE
+                );
+
+        create.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        create.addActionListener(
+                e -> {
+
+                    Lister listingUser =
+                            new Lister(
+                                    currentUser
+                                            .getUserId(),
+
+                                    currentUser
+                                            .getName(),
+
+                                    currentUser
+                                            .getEmail(),
+
+                                    currentUser
+                                            .getPassword()
+                            );
+
+                    new ListerDashboard(
+                            listingUser
+                    );
+                }
+        );
+
+        card.add(
+                title
+        );
+
+        card.add(
+                Box.createVerticalStrut(
+                        8
+                )
+        );
+
+        card.add(
+                description
+        );
+
+        card.add(
+                Box.createVerticalStrut(
+                        26
+                )
+        );
+
+        card.add(
+                create
+        );
+
+        page.add(
+                card
+        );
+
+        return createPageScrollPane(
+                page
+        );
+    }
+
+    // -------------------------------------------------
+    // APPLICATIONS
+    // -------------------------------------------------
+
+    private JScrollPane createApplicationsPage() {
+
+        applicationsContent =
+                createSimplePage(
+                        "My Applications",
+                        "Track the status of your sublet applications."
+                );
+
+        return createPageScrollPane(
+                applicationsContent
+        );
+    }
+
+    private void refreshApplicationsPage() {
+
+        applicationsContent.removeAll();
+
+        addPageHeading(
+                applicationsContent,
+                "My Applications",
+                "Track the status of your sublet applications."
+        );
+
+        int count =
+                0;
+
+        for (Application application :
+                DataStore.applications) {
+
+            if (application.getStudentId()
+                    != currentUser
+                    .getUserId()) {
+
+                continue;
+            }
+
+            Listing listing =
+                    findListing(
+                            application
+                                    .getListingId()
+                    );
+
+            if (listing == null) {
+                continue;
+            }
+
+            RoundedPanel card =
+                    createInfoCard();
+
+            JLabel title =
+                    createCardTitle(
+                            listing
+                                    .getTitle()
+                    );
+
+            JLabel location =
+                    new JLabel(
+                            listing
+                                    .getNeighbourhood()
+                                    + ", "
+                                    + listing
+                                    .getBorough()
+                    );
+
+            location.setForeground(
+                    MUTED
+            );
+
+            JLabel status =
+                    new JLabel(
+                            "Status: "
+                                    + application
+                                    .getStatus()
+                    );
+
+            status.setFont(
+                    new Font(
+                            "SansSerif",
+                            Font.BOLD,
+                            14
+                    )
+            );
+
+            status.setForeground(
+                    ORANGE
+            );
+
+            card.add(
+                    title
+            );
+
+            card.add(
+                    Box.createVerticalStrut(
+                            5
+                    )
+            );
+
+            card.add(
+                    location
+            );
+
+            card.add(
+                    Box.createVerticalStrut(
+                            10
+                    )
+            );
+
+            card.add(
+                    status
+            );
+
+            applicationsContent.add(
+                    card
+            );
+
+            applicationsContent.add(
+                    Box.createVerticalStrut(
+                            14
+                    )
+            );
+
+            count++;
+        }
+
+        if (count == 0) {
+
+            applicationsContent.add(
+                    createEmptyMessage(
+                            "You have not submitted any applications yet."
+                    )
+            );
+        }
+
+        applicationsContent.revalidate();
+        applicationsContent.repaint();
+    }
+
+    // -------------------------------------------------
+    // MY LISTINGS
+    // -------------------------------------------------
+
+    private JScrollPane createMyListingsPage() {
+
+        myListingsContent =
+                createSimplePage(
+                        "My Listings",
+                        "Manage the rooms you have posted."
+                );
+
+        return createPageScrollPane(
+                myListingsContent
+        );
+    }
+
+    private void refreshMyListingsPage() {
+
+        myListingsContent.removeAll();
+
+        addPageHeading(
+                myListingsContent,
+                "My Listings",
+                "Manage the rooms you have posted."
+        );
+
+        int count =
+                0;
+
+        for (Listing listing :
+                DataStore.listings) {
+
+            if (listing
+                    .getListerId()
+
+                    != currentUser
+                    .getUserId()) {
+
+                continue;
+            }
+
+            RoundedPanel row =
+                    new RoundedPanel(
+                            22,
+                            Color.WHITE,
+                            BORDER
+                    );
+
+            row.setLayout(
+                    new BorderLayout(
+                            18,
+                            0
+                    )
+            );
+
+            row.setBorder(
+                    new EmptyBorder(
+                            14,
+                            14,
+                            14,
+                            14
+                    )
+            );
+
+            row.setMaximumSize(
+                    new Dimension(
+                            Integer.MAX_VALUE,
+                            150
+                    )
+            );
+
+            row.setAlignmentX(
+                    Component.LEFT_ALIGNMENT
+            );
+
+            JLabel image =
+                    createListingImage(
+                            listing,
+                            180,
+                            120
+                    );
+
+            JPanel details =
+                    new JPanel();
+
+            details.setOpaque(
+                    false
+            );
+
+            details.setLayout(
+                    new BoxLayout(
+                            details,
+                            BoxLayout.Y_AXIS
+                    )
+            );
+
+            JLabel title =
+                    createCardTitle(
+                            listing
+                                    .getTitle()
+                    );
+
+            JLabel location =
+                    new JLabel(
+                            listing
+                                    .getNeighbourhood()
+                                    + ", "
+                                    + listing
+                                    .getBorough()
+                    );
+
+            location.setForeground(
+                    MUTED
+            );
+
+            JLabel price =
+                    new JLabel(
+                            "€"
+                                    + listing
+                                    .getPrice()
+                                    + " / month"
+                    );
+
+            price.setFont(
+                    new Font(
+                            "SansSerif",
+                            Font.BOLD,
+                            14
+                    )
+            );
+
+            details.add(
+                    title
+            );
+
+            details.add(
+                    Box.createVerticalStrut(
+                            5
+                    )
+            );
+
+            details.add(
+                    location
+            );
+
+            details.add(
+                    Box.createVerticalStrut(
+                            5
+                    )
+            );
+
+            details.add(
+                    price
+            );
+
+            row.add(
+                    image,
+                    BorderLayout.WEST
+            );
+
+            row.add(
+                    details,
+                    BorderLayout.CENTER
+            );
+
+            myListingsContent.add(
+                    row
+            );
+
+            myListingsContent.add(
+                    Box.createVerticalStrut(
+                            14
+                    )
+            );
+
+            count++;
+        }
+
+        if (count == 0) {
+
+            myListingsContent.add(
+                    createEmptyMessage(
+                            "You have not created any listings yet."
+                    )
+            );
+        }
+
+        myListingsContent.revalidate();
+        myListingsContent.repaint();
+    }
+
+    // -------------------------------------------------
+    // PROFILE / LOGOUT
+    // -------------------------------------------------
 
     private void showProfile() {
 
         JOptionPane.showMessageDialog(
                 this,
+
                 "Name: "
                         + currentUser.getName()
 
@@ -1945,14 +2961,15 @@ public class MarketplaceDashboard extends JFrame {
                         + "\nRole: "
                         + currentUser.getRole(),
 
-                "Profile",
+                "My Profile",
+
                 JOptionPane.INFORMATION_MESSAGE
         );
     }
 
     private void logout() {
 
-        int choice =
+        int result =
                 JOptionPane.showConfirmDialog(
                         this,
                         "Are you sure you want to logout?",
@@ -1960,11 +2977,236 @@ public class MarketplaceDashboard extends JFrame {
                         JOptionPane.YES_NO_OPTION
                 );
 
-        if (choice ==
-                JOptionPane.YES_OPTION) {
+        if (result
+                == JOptionPane.YES_OPTION) {
 
             dispose();
+
+            new LoginFrame();
         }
+    }
+
+    // -------------------------------------------------
+    // PAGE HELPERS
+    // -------------------------------------------------
+
+    private JPanel createSimplePage(
+            String title,
+            String subtitle) {
+
+        JPanel page =
+                new JPanel();
+
+        page.setLayout(
+                new BoxLayout(
+                        page,
+                        BoxLayout.Y_AXIS
+                )
+        );
+
+        page.setBackground(
+                BACKGROUND
+        );
+
+        page.setBorder(
+                new EmptyBorder(
+                        45,
+                        65,
+                        60,
+                        65
+                )
+        );
+
+        addPageHeading(
+                page,
+                title,
+                subtitle
+        );
+
+        return page;
+    }
+
+    private void addPageHeading(
+            JPanel page,
+            String title,
+            String subtitle) {
+
+        JLabel heading =
+                new JLabel(
+                        title
+                );
+
+        heading.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.BOLD,
+                        32
+                )
+        );
+
+        heading.setForeground(
+                DARK
+        );
+
+        heading.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        JLabel description =
+                new JLabel(
+                        subtitle
+                );
+
+        description.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.PLAIN,
+                        15
+                )
+        );
+
+        description.setForeground(
+                MUTED
+        );
+
+        description.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        page.add(
+                heading
+        );
+
+        page.add(
+                Box.createVerticalStrut(
+                        7
+                )
+        );
+
+        page.add(
+                description
+        );
+
+        page.add(
+                Box.createVerticalStrut(
+                        28
+                )
+        );
+    }
+
+    private JScrollPane createPageScrollPane(
+            JPanel page) {
+
+        JScrollPane scrollPane =
+                new JScrollPane(
+                        page
+                );
+
+        scrollPane.setBorder(
+                null
+        );
+
+        scrollPane.getViewport()
+                .setBackground(
+                        BACKGROUND
+                );
+
+        scrollPane
+                .getVerticalScrollBar()
+                .setUnitIncrement(
+                        20
+                );
+
+        return scrollPane;
+    }
+
+    private RoundedPanel createInfoCard() {
+
+        RoundedPanel card =
+                new RoundedPanel(
+                        22,
+                        Color.WHITE,
+                        BORDER
+                );
+
+        card.setLayout(
+                new BoxLayout(
+                        card,
+                        BoxLayout.Y_AXIS
+                )
+        );
+
+        card.setBorder(
+                new EmptyBorder(
+                        22,
+                        24,
+                        22,
+                        24
+                )
+        );
+
+        card.setMaximumSize(
+                new Dimension(
+                        Integer.MAX_VALUE,
+                        140
+                )
+        );
+
+        card.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        return card;
+    }
+
+    private JLabel createCardTitle(
+            String text) {
+
+        JLabel label =
+                new JLabel(
+                        text
+                );
+
+        label.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.BOLD,
+                        18
+                )
+        );
+
+        label.setForeground(
+                DARK
+        );
+
+        return label;
+    }
+
+    private JLabel createEmptyMessage(
+            String message) {
+
+        JLabel label =
+                new JLabel(
+                        message
+                );
+
+        label.setFont(
+                new Font(
+                        "SansSerif",
+                        Font.PLAIN,
+                        15
+                )
+        );
+
+        label.setForeground(
+                MUTED
+        );
+
+        label.setAlignmentX(
+                Component.LEFT_ALIGNMENT
+        );
+
+        return label;
     }
 
     private Listing findListing(
@@ -1983,5 +3225,245 @@ public class MarketplaceDashboard extends JFrame {
         }
 
         return null;
+    }
+
+    // -------------------------------------------------
+    // CUSTOM UI COMPONENTS
+    // -------------------------------------------------
+
+    private class RoundedPanel
+            extends JPanel {
+
+        private int radius;
+        private Color backgroundColor;
+        private Color borderColor;
+
+        public RoundedPanel(
+                int radius,
+                Color backgroundColor,
+                Color borderColor) {
+
+            this.radius =
+                    radius;
+
+            this.backgroundColor =
+                    backgroundColor;
+
+            this.borderColor =
+                    borderColor;
+
+            setOpaque(
+                    false
+            );
+        }
+
+        @Override
+        protected void paintComponent(
+                Graphics graphics) {
+
+            Graphics2D g =
+                    (Graphics2D)
+                            graphics.create();
+
+            g.setRenderingHint(
+                    RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON
+            );
+
+            g.setColor(
+                    backgroundColor
+            );
+
+            g.fillRoundRect(
+                    0,
+                    0,
+                    getWidth() - 1,
+                    getHeight() - 1,
+                    radius,
+                    radius
+            );
+
+            if (borderColor != null) {
+
+                g.setColor(
+                        borderColor
+                );
+
+                g.drawRoundRect(
+                        0,
+                        0,
+                        getWidth() - 1,
+                        getHeight() - 1,
+                        radius,
+                        radius
+                );
+            }
+
+            g.dispose();
+
+            super.paintComponent(
+                    graphics
+            );
+        }
+    }
+
+    private class RoundedButton
+            extends JButton {
+
+        private Color backgroundColor;
+        private Color textColor;
+        private Color borderColor;
+
+        public RoundedButton(
+                String text,
+                Color backgroundColor,
+                Color textColor) {
+
+            super(
+                    text
+            );
+
+            this.backgroundColor =
+                    backgroundColor;
+
+            this.textColor =
+                    textColor;
+
+            setForeground(
+                    textColor
+            );
+
+            setFont(
+                    new Font(
+                            "SansSerif",
+                            Font.BOLD,
+                            14
+                    )
+            );
+
+            setBorder(
+                    new EmptyBorder(
+                            11,
+                            20,
+                            11,
+                            20
+                    )
+            );
+
+            setFocusPainted(
+                    false
+            );
+
+            setContentAreaFilled(
+                    false
+            );
+
+            setOpaque(
+                    false
+            );
+
+            setCursor(
+                    Cursor.getPredefinedCursor(
+                            Cursor.HAND_CURSOR
+                    )
+            );
+
+            addMouseListener(
+                    new MouseAdapter() {
+
+                        @Override
+                        public void mouseEntered(
+                                MouseEvent e) {
+
+                            if (RoundedButton.this
+                                    .backgroundColor
+                                    .equals(
+                                            ORANGE
+                                    )) {
+
+                                RoundedButton.this
+                                        .backgroundColor =
+                                        ORANGE_HOVER;
+
+                                repaint();
+                            }
+                        }
+
+                        @Override
+                        public void mouseExited(
+                                MouseEvent e) {
+
+                            if (RoundedButton.this
+                                    .backgroundColor
+                                    .equals(
+                                            ORANGE_HOVER
+                                    )) {
+
+                                RoundedButton.this
+                                        .backgroundColor =
+                                        ORANGE;
+
+                                repaint();
+                            }
+                        }
+                    }
+            );
+        }
+
+        public void setBorderColor(
+                Color borderColor) {
+
+            this.borderColor =
+                    borderColor;
+        }
+
+        @Override
+        protected void paintComponent(
+                Graphics graphics) {
+
+            Graphics2D g =
+                    (Graphics2D)
+                            graphics.create();
+
+            g.setRenderingHint(
+                    RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON
+            );
+
+            g.setColor(
+                    backgroundColor
+            );
+
+            g.fillRoundRect(
+                    0,
+                    0,
+                    getWidth() - 1,
+                    getHeight() - 1,
+                    28,
+                    28
+            );
+
+            if (borderColor != null) {
+
+                g.setColor(
+                        borderColor
+                );
+
+                g.drawRoundRect(
+                        0,
+                        0,
+                        getWidth() - 1,
+                        getHeight() - 1,
+                        28,
+                        28
+                );
+            }
+
+            g.dispose();
+
+            super.paintComponent(
+                    graphics
+            );
+        }
     }
 }
