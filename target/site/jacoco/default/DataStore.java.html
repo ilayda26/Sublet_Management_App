@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataStore.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sublet-management-system</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">DataStore.java</span></div><h1>DataStore.java</h1><pre class="source lang-java linenums">import java.util.ArrayList;
+import java.util.List;
+
+<span class="nc" id="L4">public class DataStore {</span>
+
+<span class="nc" id="L6">    public static List&lt;User&gt; users =</span>
+            new ArrayList&lt;&gt;();
+
+<span class="nc" id="L9">    public static List&lt;Listing&gt; listings =</span>
+            new ArrayList&lt;&gt;();
+
+<span class="nc" id="L12">    public static List&lt;Application&gt; applications =</span>
+            new ArrayList&lt;&gt;();
+
+<span class="nc" id="L15">    public static List&lt;Report&gt; reports =</span>
+            new ArrayList&lt;&gt;();
+
+<span class="nc" id="L18">    private static int nextUserId = 1;</span>
+<span class="nc" id="L19">    private static int nextListingId = 1;</span>
+<span class="nc" id="L20">    private static int nextApplicationId = 1;</span>
+<span class="nc" id="L21">    private static int nextReportId = 1;</span>
+
+    public static int getNextUserId() {
+<span class="nc" id="L24">        return nextUserId++;</span>
+    }
+
+    public static int getNextListingId() {
+<span class="nc" id="L28">        return nextListingId++;</span>
+    }
+
+    public static int getNextApplicationId() {
+<span class="nc" id="L32">        return nextApplicationId++;</span>
+    }
+
+    public static int getNextReportId() {
+<span class="nc" id="L36">        return nextReportId++;</span>
+    }
+
+    public static boolean emailExists(
+            String email) {
+
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        for (User user : users) {</span>
+
+<span class="nc" id="L44">            if (user.getEmail()</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">                    .equalsIgnoreCase(email)) {</span>
+
+<span class="nc" id="L47">                return true;</span>
+            }
+<span class="nc" id="L49">        }</span>
+
+<span class="nc" id="L51">        return false;</span>
+    }
+
+    public static User findUser(
+            String email,
+            String password) {
+
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        for (User user : users) {</span>
+
+<span class="nc" id="L60">            if (user.getEmail()</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">                    .equalsIgnoreCase(email)</span>
+
+<span class="nc" id="L63">                    &amp;&amp; user.getPassword()</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">                    .equals(password)) {</span>
+
+<span class="nc" id="L66">                return user;</span>
+            }
+<span class="nc" id="L68">        }</span>
+
+<span class="nc" id="L70">        return null;</span>
+    }
+
+    public static User findUserById(
+            int userId) {
+
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        for (User user : users) {</span>
+
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            if (user.getUserId()</span>
+                    == userId) {
+
+<span class="nc" id="L81">                return user;</span>
+            }
+<span class="nc" id="L83">        }</span>
+
+<span class="nc" id="L85">        return null;</span>
+    }
+
+    public static Listing findListingById(
+            int listingId) {
+
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        for (Listing listing : listings) {</span>
+
+<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (listing.getListingId()</span>
+                    == listingId) {
+
+<span class="nc" id="L96">                return listing;</span>
+            }
+<span class="nc" id="L98">        }</span>
+
+<span class="nc" id="L100">        return null;</span>
+    }
+
+    public static void ensureAdmin() {
+
+<span class="nc" id="L105">        String adminEmail =</span>
+                &quot;admin@berlinsublet.de&quot;;
+
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        for (User user : users) {</span>
+
+<span class="nc" id="L110">            if (user.getEmail()</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">                    .equalsIgnoreCase(</span>
+                            adminEmail
+                    )) {
+
+<span class="nc" id="L115">                return;</span>
+            }
+<span class="nc" id="L117">        }</span>
+
+<span class="nc" id="L119">        users.add(</span>
+                new Admin(
+                        1000,
+                        &quot;Administrator&quot;,
+                        adminEmail,
+                        &quot;admin123&quot;
+                )
+        );
+<span class="nc" id="L127">    }</span>
+
+    public static void recalculateIds() {
+
+<span class="nc" id="L131">        int highestUserId = 0;</span>
+<span class="nc" id="L132">        int highestListingId = 0;</span>
+<span class="nc" id="L133">        int highestApplicationId = 0;</span>
+<span class="nc" id="L134">        int highestReportId = 0;</span>
+
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        for (User user : users) {</span>
+
+            // Admin ID should not affect normal user IDs
+<span class="nc bnc" id="L139" title="All 2 branches missed.">            if (!(user instanceof Admin)</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">                    &amp;&amp; user.getUserId()</span>
+                    &gt; highestUserId) {
+
+<span class="nc" id="L143">                highestUserId =</span>
+<span class="nc" id="L144">                        user.getUserId();</span>
+            }
+<span class="nc" id="L146">        }</span>
+
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        for (Listing listing : listings) {</span>
+
+<span class="nc bnc" id="L150" title="All 2 branches missed.">            if (listing.getListingId()</span>
+                    &gt; highestListingId) {
+
+<span class="nc" id="L153">                highestListingId =</span>
+<span class="nc" id="L154">                        listing.getListingId();</span>
+            }
+<span class="nc" id="L156">        }</span>
+
+        for (Application application :
+<span class="nc bnc" id="L159" title="All 2 branches missed.">                applications) {</span>
+
+<span class="nc" id="L161">            if (application</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">                    .getApplicationId()</span>
+                    &gt; highestApplicationId) {
+
+<span class="nc" id="L165">                highestApplicationId =</span>
+                        application
+<span class="nc" id="L167">                                .getApplicationId();</span>
+            }
+<span class="nc" id="L169">        }</span>
+
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        for (Report report : reports) {</span>
+
+<span class="nc bnc" id="L173" title="All 2 branches missed.">            if (report.getReportId()</span>
+                    &gt; highestReportId) {
+
+<span class="nc" id="L176">                highestReportId =</span>
+<span class="nc" id="L177">                        report.getReportId();</span>
+            }
+<span class="nc" id="L179">        }</span>
+
+<span class="nc" id="L181">        nextUserId =</span>
+                highestUserId + 1;
+
+<span class="nc" id="L184">        nextListingId =</span>
+                highestListingId + 1;
+
+<span class="nc" id="L187">        nextApplicationId =</span>
+                highestApplicationId + 1;
+
+<span class="nc" id="L190">        nextReportId =</span>
+                highestReportId + 1;
+<span class="nc" id="L192">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,1478 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ListerDashboard.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sublet-management-system</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">ListerDashboard.java</span></div><h1>ListerDashboard.java</h1><pre class="source lang-java linenums">import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.time.LocalDate;
+
+public class ListerDashboard extends JFrame {
+
+    private Lister currentLister;
+
+<span class="nc" id="L10">    public ListerDashboard(Lister lister) {</span>
+
+<span class="nc" id="L12">        this.currentLister = lister;</span>
+
+<span class="nc" id="L14">        setTitle(&quot;Berlin Sublet - Lister Dashboard&quot;);</span>
+<span class="nc" id="L15">        setSize(1000, 650);</span>
+<span class="nc" id="L16">        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</span>
+<span class="nc" id="L17">        setLocationRelativeTo(null);</span>
+
+<span class="nc" id="L19">        JPanel mainPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L20">        mainPanel.setBackground(Color.WHITE);</span>
+
+        // Header
+<span class="nc" id="L23">        JPanel headerPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L24">        headerPanel.setBackground(new Color(255, 140, 0));</span>
+<span class="nc" id="L25">        headerPanel.setBorder(</span>
+<span class="nc" id="L26">                BorderFactory.createEmptyBorder(15, 20, 15, 20)</span>
+        );
+
+<span class="nc" id="L29">        JLabel titleLabel = new JLabel(&quot;BERLIN SUBLET&quot;);</span>
+<span class="nc" id="L30">        titleLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 24));</span>
+<span class="nc" id="L31">        titleLabel.setForeground(Color.WHITE);</span>
+
+<span class="nc" id="L33">        JLabel welcomeLabel = new JLabel(</span>
+<span class="nc" id="L34">                &quot;Welcome, &quot; + currentLister.getName()</span>
+        );
+
+<span class="nc" id="L37">        welcomeLabel.setFont(</span>
+                new Font(&quot;Arial&quot;, Font.BOLD, 16)
+        );
+
+<span class="nc" id="L41">        welcomeLabel.setForeground(Color.WHITE);</span>
+
+<span class="nc" id="L43">        headerPanel.add(titleLabel, BorderLayout.WEST);</span>
+<span class="nc" id="L44">        headerPanel.add(welcomeLabel, BorderLayout.EAST);</span>
+
+<span class="nc" id="L46">        mainPanel.add(headerPanel, BorderLayout.NORTH);</span>
+
+        // Dashboard content
+<span class="nc" id="L49">        JPanel contentPanel = new JPanel();</span>
+<span class="nc" id="L50">        contentPanel.setLayout(</span>
+                new BoxLayout(contentPanel, BoxLayout.Y_AXIS)
+        );
+
+<span class="nc" id="L54">        contentPanel.setBackground(Color.WHITE);</span>
+
+<span class="nc" id="L56">        contentPanel.setBorder(</span>
+<span class="nc" id="L57">                BorderFactory.createEmptyBorder(</span>
+                        45, 100, 45, 100
+                )
+        );
+
+<span class="nc" id="L62">        JLabel heading = new JLabel(&quot;Lister Dashboard&quot;);</span>
+<span class="nc" id="L63">        heading.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 26));</span>
+<span class="nc" id="L64">        heading.setAlignmentX(Component.CENTER_ALIGNMENT);</span>
+
+<span class="nc" id="L66">        JButton createListingButton =</span>
+<span class="nc" id="L67">                createButton(&quot;Create Listing&quot;);</span>
+
+<span class="nc" id="L69">        JButton myListingsButton =</span>
+<span class="nc" id="L70">                createButton(&quot;My Listings&quot;);</span>
+
+<span class="nc" id="L72">        JButton applicationsButton =</span>
+<span class="nc" id="L73">                createButton(&quot;Manage Applications&quot;);</span>
+
+<span class="nc" id="L75">        JButton profileButton =</span>
+<span class="nc" id="L76">                createButton(&quot;Profile&quot;);</span>
+
+<span class="nc" id="L78">        JButton logoutButton =</span>
+<span class="nc" id="L79">                createButton(&quot;Logout&quot;);</span>
+
+<span class="nc" id="L81">        contentPanel.add(heading);</span>
+<span class="nc" id="L82">        contentPanel.add(Box.createVerticalStrut(30));</span>
+
+<span class="nc" id="L84">        contentPanel.add(createListingButton);</span>
+<span class="nc" id="L85">        contentPanel.add(Box.createVerticalStrut(12));</span>
+
+<span class="nc" id="L87">        contentPanel.add(myListingsButton);</span>
+<span class="nc" id="L88">        contentPanel.add(Box.createVerticalStrut(12));</span>
+
+<span class="nc" id="L90">        contentPanel.add(applicationsButton);</span>
+<span class="nc" id="L91">        contentPanel.add(Box.createVerticalStrut(12));</span>
+
+<span class="nc" id="L93">        contentPanel.add(profileButton);</span>
+<span class="nc" id="L94">        contentPanel.add(Box.createVerticalStrut(12));</span>
+
+<span class="nc" id="L96">        contentPanel.add(logoutButton);</span>
+
+<span class="nc" id="L98">        mainPanel.add(contentPanel, BorderLayout.CENTER);</span>
+
+<span class="nc" id="L100">        createListingButton.addActionListener(e -&gt;</span>
+<span class="nc" id="L101">                showCreateListingForm()</span>
+        );
+
+<span class="nc" id="L104">        myListingsButton.addActionListener(e -&gt;</span>
+<span class="nc" id="L105">                showMyListings()</span>
+        );
+
+<span class="nc" id="L108">        applicationsButton.addActionListener(e -&gt;</span>
+<span class="nc" id="L109">                showApplications()</span>
+        );
+
+<span class="nc" id="L112">        profileButton.addActionListener(e -&gt;</span>
+<span class="nc" id="L113">                showProfile()</span>
+        );
+
+<span class="nc" id="L116">        logoutButton.addActionListener(e -&gt;</span>
+<span class="nc" id="L117">                logout()</span>
+        );
+
+<span class="nc" id="L120">        add(mainPanel);</span>
+<span class="nc" id="L121">        setVisible(true);</span>
+<span class="nc" id="L122">    }</span>
+
+    private JButton createButton(String text) {
+
+<span class="nc" id="L126">        JButton button = new JButton(text);</span>
+
+<span class="nc" id="L128">        button.setMaximumSize(</span>
+                new Dimension(360, 42)
+        );
+
+<span class="nc" id="L132">        button.setPreferredSize(</span>
+                new Dimension(360, 42)
+        );
+
+<span class="nc" id="L136">        button.setMinimumSize(</span>
+                new Dimension(360, 42)
+        );
+
+<span class="nc" id="L140">        button.setAlignmentX(Component.CENTER_ALIGNMENT);</span>
+
+<span class="nc" id="L142">        button.setBackground(</span>
+                new Color(255, 140, 0)
+        );
+
+<span class="nc" id="L146">        button.setForeground(Color.WHITE);</span>
+
+<span class="nc" id="L148">        button.setFont(</span>
+                new Font(&quot;Arial&quot;, Font.BOLD, 15)
+        );
+
+<span class="nc" id="L152">        button.setFocusPainted(false);</span>
+
+<span class="nc" id="L154">        return button;</span>
+    }
+
+    private void showCreateListingForm() {
+
+<span class="nc" id="L159">        JDialog dialog = new JDialog(</span>
+                this,
+                &quot;Create Listing&quot;,
+                true
+        );
+
+<span class="nc" id="L165">        dialog.setSize(620, 610);</span>
+<span class="nc" id="L166">        dialog.setResizable(false);</span>
+<span class="nc" id="L167">        dialog.setLocationRelativeTo(this);</span>
+
+<span class="nc" id="L169">        JPanel mainPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L170">        mainPanel.setBackground(Color.WHITE);</span>
+<span class="nc" id="L171">        mainPanel.setBorder(</span>
+<span class="nc" id="L172">                BorderFactory.createEmptyBorder(</span>
+                        20, 35, 20, 35
+                )
+        );
+
+<span class="nc" id="L177">        JLabel heading = new JLabel(</span>
+                &quot;Create New Listing&quot;,
+                SwingConstants.CENTER
+        );
+
+<span class="nc" id="L182">        heading.setFont(</span>
+                new Font(&quot;Arial&quot;, Font.BOLD, 22)
+        );
+
+<span class="nc" id="L186">        heading.setBorder(</span>
+<span class="nc" id="L187">                BorderFactory.createEmptyBorder(</span>
+                        0, 0, 15, 0
+                )
+        );
+
+<span class="nc" id="L192">        mainPanel.add(heading, BorderLayout.NORTH);</span>
+
+<span class="nc" id="L194">        JPanel formPanel =</span>
+                new JPanel(new GridBagLayout());
+
+<span class="nc" id="L197">        formPanel.setBackground(Color.WHITE);</span>
+
+<span class="nc" id="L199">        GridBagConstraints gbc =</span>
+                new GridBagConstraints();
+
+<span class="nc" id="L202">        gbc.insets = new Insets(7, 8, 7, 8);</span>
+<span class="nc" id="L203">        gbc.anchor = GridBagConstraints.WEST;</span>
+
+<span class="nc" id="L205">        JTextField titleField =</span>
+                new JTextField(20);
+
+<span class="nc" id="L208">        JTextField priceField =</span>
+                new JTextField(20);
+
+<span class="nc" id="L211">        JTextField startDateField =</span>
+                new JTextField(20);
+
+<span class="nc" id="L214">        JTextField endDateField =</span>
+                new JTextField(20);
+
+<span class="nc" id="L217">        JComboBox&lt;String&gt; boroughBox =</span>
+                new JComboBox&lt;&gt;(
+<span class="nc" id="L219">                        BerlinLocations.getBoroughs()</span>
+                );
+
+<span class="nc" id="L222">        JComboBox&lt;String&gt; neighbourhoodBox =</span>
+                new JComboBox&lt;&gt;();
+
+<span class="nc" id="L225">        String[] roomTypes = {</span>
+                &quot;Private Room&quot;,
+                &quot;Shared Room&quot;,
+                &quot;Studio&quot;,
+                &quot;Entire Apartment&quot;
+        };
+
+<span class="nc" id="L232">        JComboBox&lt;String&gt; roomTypeBox =</span>
+                new JComboBox&lt;&gt;(roomTypes);
+
+<span class="nc" id="L235">        JTextArea descriptionArea =</span>
+                new JTextArea(4, 20);
+
+<span class="nc" id="L238">        descriptionArea.setLineWrap(true);</span>
+<span class="nc" id="L239">        descriptionArea.setWrapStyleWord(true);</span>
+
+<span class="nc" id="L241">        JScrollPane descriptionScroll =</span>
+                new JScrollPane(descriptionArea);
+
+<span class="nc" id="L244">        descriptionScroll.setPreferredSize(</span>
+                new Dimension(280, 70)
+        );
+
+<span class="nc" id="L248">        Dimension fieldSize =</span>
+                new Dimension(280, 30);
+
+<span class="nc" id="L251">        titleField.setPreferredSize(fieldSize);</span>
+<span class="nc" id="L252">        priceField.setPreferredSize(fieldSize);</span>
+<span class="nc" id="L253">        startDateField.setPreferredSize(fieldSize);</span>
+<span class="nc" id="L254">        endDateField.setPreferredSize(fieldSize);</span>
+
+<span class="nc" id="L256">        boroughBox.setPreferredSize(fieldSize);</span>
+<span class="nc" id="L257">        neighbourhoodBox.setPreferredSize(fieldSize);</span>
+<span class="nc" id="L258">        roomTypeBox.setPreferredSize(fieldSize);</span>
+
+<span class="nc" id="L260">        JButton choosePictureButton =</span>
+                new JButton(&quot;Choose Picture&quot;);
+
+<span class="nc" id="L263">        JLabel pictureLabel =</span>
+                new JLabel(&quot;No picture selected&quot;);
+
+<span class="nc" id="L266">        final String[] selectedImagePath = {null};</span>
+
+<span class="nc" id="L268">        choosePictureButton.addActionListener(e -&gt; {</span>
+
+<span class="nc" id="L270">            JFileChooser chooser =</span>
+                    new JFileChooser();
+
+<span class="nc" id="L273">            int result =</span>
+<span class="nc" id="L274">                    chooser.showOpenDialog(dialog);</span>
+
+<span class="nc bnc" id="L276" title="All 2 branches missed.">            if (result ==</span>
+                    JFileChooser.APPROVE_OPTION) {
+
+<span class="nc" id="L279">                File selectedFile =</span>
+<span class="nc" id="L280">                        chooser.getSelectedFile();</span>
+
+<span class="nc" id="L282">                String fileName =</span>
+                        selectedFile
+<span class="nc" id="L284">                                .getName()</span>
+<span class="nc" id="L285">                                .toLowerCase();</span>
+
+<span class="nc bnc" id="L287" title="All 2 branches missed.">                if (!fileName.endsWith(&quot;.jpg&quot;)</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">                        &amp;&amp; !fileName.endsWith(&quot;.jpeg&quot;)</span>
+<span class="nc bnc" id="L289" title="All 2 branches missed.">                        &amp;&amp; !fileName.endsWith(&quot;.png&quot;)) {</span>
+
+<span class="nc" id="L291">                    JOptionPane.showMessageDialog(</span>
+                            dialog,
+                            &quot;Please choose a JPG, JPEG or PNG image.&quot;,
+                            &quot;Invalid Image&quot;,
+                            JOptionPane.ERROR_MESSAGE
+                    );
+
+<span class="nc" id="L298">                    return;</span>
+                }
+
+<span class="nc" id="L301">                selectedImagePath[0] =</span>
+<span class="nc" id="L302">                        selectedFile.getAbsolutePath();</span>
+
+<span class="nc" id="L304">                pictureLabel.setText(</span>
+<span class="nc" id="L305">                        selectedFile.getName()</span>
+                );
+            }
+<span class="nc" id="L308">        });</span>
+
+<span class="nc" id="L310">        String firstBorough =</span>
+<span class="nc" id="L311">                (String) boroughBox.getSelectedItem();</span>
+
+        for (String neighbourhood :
+<span class="nc bnc" id="L314" title="All 2 branches missed.">                BerlinLocations.getNeighbourhoods(</span>
+                        firstBorough
+                )) {
+
+<span class="nc" id="L318">            neighbourhoodBox.addItem(</span>
+                    neighbourhood
+            );
+        }
+
+<span class="nc" id="L323">        boroughBox.addActionListener(e -&gt; {</span>
+
+<span class="nc" id="L325">            String borough =</span>
+<span class="nc" id="L326">                    (String) boroughBox.getSelectedItem();</span>
+
+<span class="nc" id="L328">            neighbourhoodBox.removeAllItems();</span>
+
+            for (String neighbourhood :
+<span class="nc bnc" id="L331" title="All 2 branches missed.">                    BerlinLocations.getNeighbourhoods(</span>
+                            borough
+                    )) {
+
+<span class="nc" id="L335">                neighbourhoodBox.addItem(</span>
+                        neighbourhood
+                );
+            }
+<span class="nc" id="L339">        });</span>
+
+<span class="nc" id="L341">        int row = 0;</span>
+
+<span class="nc" id="L343">        addFormRow(</span>
+                formPanel,
+                gbc,
+                row++,
+                &quot;Title:&quot;,
+                titleField
+        );
+
+<span class="nc" id="L351">        addFormRow(</span>
+                formPanel,
+                gbc,
+                row++,
+                &quot;Borough:&quot;,
+                boroughBox
+        );
+
+<span class="nc" id="L359">        addFormRow(</span>
+                formPanel,
+                gbc,
+                row++,
+                &quot;Neighbourhood:&quot;,
+                neighbourhoodBox
+        );
+
+<span class="nc" id="L367">        addFormRow(</span>
+                formPanel,
+                gbc,
+                row++,
+                &quot;Monthly Price (€):&quot;,
+                priceField
+        );
+
+<span class="nc" id="L375">        addFormRow(</span>
+                formPanel,
+                gbc,
+                row++,
+                &quot;Start Date (YYYY-MM-DD):&quot;,
+                startDateField
+        );
+
+<span class="nc" id="L383">        addFormRow(</span>
+                formPanel,
+                gbc,
+                row++,
+                &quot;End Date (YYYY-MM-DD):&quot;,
+                endDateField
+        );
+
+<span class="nc" id="L391">        addFormRow(</span>
+                formPanel,
+                gbc,
+                row++,
+                &quot;Room Type:&quot;,
+                roomTypeBox
+        );
+
+        // Description
+<span class="nc" id="L400">        gbc.gridx = 0;</span>
+<span class="nc" id="L401">        gbc.gridy = row;</span>
+<span class="nc" id="L402">        gbc.weightx = 0;</span>
+<span class="nc" id="L403">        gbc.fill = GridBagConstraints.NONE;</span>
+<span class="nc" id="L404">        gbc.anchor = GridBagConstraints.NORTHWEST;</span>
+
+<span class="nc" id="L406">        formPanel.add(</span>
+                new JLabel(&quot;Description:&quot;),
+                gbc
+        );
+
+<span class="nc" id="L411">        gbc.gridx = 1;</span>
+<span class="nc" id="L412">        gbc.weightx = 1;</span>
+<span class="nc" id="L413">        gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+
+<span class="nc" id="L415">        formPanel.add(</span>
+                descriptionScroll,
+                gbc
+        );
+
+<span class="nc" id="L420">        row++;</span>
+
+        // Picture
+<span class="nc" id="L423">        gbc.gridx = 0;</span>
+<span class="nc" id="L424">        gbc.gridy = row;</span>
+<span class="nc" id="L425">        gbc.weightx = 0;</span>
+<span class="nc" id="L426">        gbc.fill = GridBagConstraints.NONE;</span>
+<span class="nc" id="L427">        gbc.anchor = GridBagConstraints.WEST;</span>
+
+<span class="nc" id="L429">        formPanel.add(</span>
+                new JLabel(&quot;Picture:&quot;),
+                gbc
+        );
+
+<span class="nc" id="L434">        JPanel picturePanel =</span>
+                new JPanel(
+                        new FlowLayout(
+                                FlowLayout.LEFT,
+                                8,
+                                0
+                        )
+                );
+
+<span class="nc" id="L443">        picturePanel.setBackground(Color.WHITE);</span>
+<span class="nc" id="L444">        picturePanel.add(choosePictureButton);</span>
+<span class="nc" id="L445">        picturePanel.add(pictureLabel);</span>
+
+<span class="nc" id="L447">        gbc.gridx = 1;</span>
+<span class="nc" id="L448">        gbc.weightx = 1;</span>
+<span class="nc" id="L449">        gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+
+<span class="nc" id="L451">        formPanel.add(</span>
+                picturePanel,
+                gbc
+        );
+
+<span class="nc" id="L456">        mainPanel.add(</span>
+                formPanel,
+                BorderLayout.CENTER
+        );
+
+<span class="nc" id="L461">        JPanel buttonPanel =</span>
+                new JPanel(
+                        new FlowLayout(
+                                FlowLayout.CENTER,
+                                15,
+                                10
+                        )
+                );
+
+<span class="nc" id="L470">        buttonPanel.setBackground(Color.WHITE);</span>
+
+<span class="nc" id="L472">        JButton createButton =</span>
+                new JButton(&quot;Create&quot;);
+
+<span class="nc" id="L475">        JButton cancelButton =</span>
+                new JButton(&quot;Cancel&quot;);
+
+<span class="nc" id="L478">        createButton.setPreferredSize(</span>
+                new Dimension(110, 35)
+        );
+
+<span class="nc" id="L482">        cancelButton.setPreferredSize(</span>
+                new Dimension(110, 35)
+        );
+
+<span class="nc" id="L486">        createButton.setBackground(</span>
+                new Color(255, 140, 0)
+        );
+
+<span class="nc" id="L490">        createButton.setForeground(Color.WHITE);</span>
+<span class="nc" id="L491">        createButton.setFocusPainted(false);</span>
+<span class="nc" id="L492">        cancelButton.setFocusPainted(false);</span>
+
+<span class="nc" id="L494">        buttonPanel.add(createButton);</span>
+<span class="nc" id="L495">        buttonPanel.add(cancelButton);</span>
+
+<span class="nc" id="L497">        mainPanel.add(</span>
+                buttonPanel,
+                BorderLayout.SOUTH
+        );
+
+<span class="nc" id="L502">        createButton.addActionListener(e -&gt; {</span>
+
+            try {
+
+<span class="nc" id="L506">                String title =</span>
+<span class="nc" id="L507">                        titleField.getText().trim();</span>
+
+<span class="nc" id="L509">                String borough =</span>
+                        (String)
+<span class="nc" id="L511">                                boroughBox.getSelectedItem();</span>
+
+<span class="nc" id="L513">                String neighbourhood =</span>
+                        (String)
+<span class="nc" id="L515">                                neighbourhoodBox.getSelectedItem();</span>
+
+<span class="nc" id="L517">                String roomType =</span>
+                        (String)
+<span class="nc" id="L519">                                roomTypeBox.getSelectedItem();</span>
+
+<span class="nc" id="L521">                String description =</span>
+<span class="nc" id="L522">                        descriptionArea.getText().trim();</span>
+
+<span class="nc bnc" id="L524" title="All 2 branches missed.">                if (!Validator.notEmpty(title)</span>
+<span class="nc bnc" id="L525" title="All 2 branches missed.">                        || !Validator.notEmpty(</span>
+<span class="nc" id="L526">                                priceField.getText()</span>
+                        )
+<span class="nc bnc" id="L528" title="All 2 branches missed.">                        || !Validator.notEmpty(</span>
+<span class="nc" id="L529">                                startDateField.getText()</span>
+                        )
+<span class="nc bnc" id="L531" title="All 2 branches missed.">                        || !Validator.notEmpty(</span>
+<span class="nc" id="L532">                                endDateField.getText()</span>
+                        )
+<span class="nc bnc" id="L534" title="All 2 branches missed.">                        || !Validator.notEmpty(</span>
+                                description
+                        )) {
+
+<span class="nc" id="L538">                    JOptionPane.showMessageDialog(</span>
+                            dialog,
+                            &quot;Please complete all required fields.&quot;,
+                            &quot;Invalid Input&quot;,
+                            JOptionPane.ERROR_MESSAGE
+                    );
+
+<span class="nc" id="L545">                    return;</span>
+                }
+
+<span class="nc" id="L548">                double price =</span>
+<span class="nc" id="L549">                        Double.parseDouble(</span>
+                                priceField
+<span class="nc" id="L551">                                        .getText()</span>
+<span class="nc" id="L552">                                        .trim()</span>
+                        );
+
+<span class="nc bnc" id="L555" title="All 2 branches missed.">                if (!Validator.validPrice(price)) {</span>
+
+<span class="nc" id="L557">                    JOptionPane.showMessageDialog(</span>
+                            dialog,
+                            &quot;Price must be greater than zero.&quot;,
+                            &quot;Invalid Price&quot;,
+                            JOptionPane.ERROR_MESSAGE
+                    );
+
+<span class="nc" id="L564">                    return;</span>
+                }
+
+<span class="nc" id="L567">                LocalDate startDate =</span>
+<span class="nc" id="L568">                        LocalDate.parse(</span>
+                                startDateField
+<span class="nc" id="L570">                                        .getText()</span>
+<span class="nc" id="L571">                                        .trim()</span>
+                        );
+
+<span class="nc" id="L574">                LocalDate endDate =</span>
+<span class="nc" id="L575">                        LocalDate.parse(</span>
+                                endDateField
+<span class="nc" id="L577">                                        .getText()</span>
+<span class="nc" id="L578">                                        .trim()</span>
+                        );
+
+<span class="nc bnc" id="L581" title="All 2 branches missed.">                if (!Validator.validDates(</span>
+                        startDate,
+                        endDate
+                )) {
+
+<span class="nc" id="L586">                    JOptionPane.showMessageDialog(</span>
+                            dialog,
+                            &quot;End date must be after the start date.&quot;,
+                            &quot;Invalid Dates&quot;,
+                            JOptionPane.ERROR_MESSAGE
+                    );
+
+<span class="nc" id="L593">                    return;</span>
+                }
+
+<span class="nc bnc" id="L596" title="All 2 branches missed.">                if (!BerlinLocations.validLocation(</span>
+                        borough,
+                        neighbourhood
+                )) {
+
+<span class="nc" id="L601">                    JOptionPane.showMessageDialog(</span>
+                            dialog,
+                            &quot;Please select a valid Berlin location.&quot;,
+                            &quot;Invalid Location&quot;,
+                            JOptionPane.ERROR_MESSAGE
+                    );
+
+<span class="nc" id="L608">                    return;</span>
+                }
+
+<span class="nc" id="L611">                Listing listing =</span>
+                        new Listing(
+<span class="nc" id="L613">                                DataStore.getNextListingId(),</span>
+<span class="nc" id="L614">                                currentLister.getUserId(),</span>
+                                title,
+                                borough,
+                                neighbourhood,
+                                price,
+                                startDate,
+                                endDate,
+                                roomType,
+                                description
+                        );
+
+<span class="nc bnc" id="L625" title="All 2 branches missed.">                if (selectedImagePath[0] != null) {</span>
+
+<span class="nc" id="L627">                    listing.setImagePath(</span>
+                            selectedImagePath[0]
+                    );
+                }
+
+<span class="nc" id="L632">                DataStore.listings.add(listing);</span>
+
+<span class="nc" id="L634">                JOptionPane.showMessageDialog(</span>
+                        dialog,
+                        &quot;Listing created successfully.&quot;,
+                        &quot;Success&quot;,
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+<span class="nc" id="L641">                dialog.dispose();</span>
+
+<span class="nc" id="L643">            } catch (NumberFormatException ex) {</span>
+
+<span class="nc" id="L645">                JOptionPane.showMessageDialog(</span>
+                        dialog,
+                        &quot;Please enter a valid price.&quot;,
+                        &quot;Invalid Price&quot;,
+                        JOptionPane.ERROR_MESSAGE
+                );
+
+<span class="nc" id="L652">            } catch (Exception ex) {</span>
+
+<span class="nc" id="L654">                JOptionPane.showMessageDialog(</span>
+                        dialog,
+                        &quot;Please enter dates in YYYY-MM-DD format.&quot;,
+                        &quot;Invalid Date&quot;,
+                        JOptionPane.ERROR_MESSAGE
+                );
+<span class="nc" id="L660">            }</span>
+<span class="nc" id="L661">        });</span>
+
+<span class="nc" id="L663">        cancelButton.addActionListener(e -&gt;</span>
+<span class="nc" id="L664">                dialog.dispose()</span>
+        );
+
+<span class="nc" id="L667">        dialog.add(mainPanel);</span>
+<span class="nc" id="L668">        dialog.setVisible(true);</span>
+<span class="nc" id="L669">    }</span>
+
+    private void addFormRow(
+            JPanel panel,
+            GridBagConstraints gbc,
+            int row,
+            String label,
+            JComponent component) {
+
+<span class="nc" id="L678">        gbc.gridx = 0;</span>
+<span class="nc" id="L679">        gbc.gridy = row;</span>
+<span class="nc" id="L680">        gbc.weightx = 0;</span>
+<span class="nc" id="L681">        gbc.fill = GridBagConstraints.NONE;</span>
+<span class="nc" id="L682">        gbc.anchor = GridBagConstraints.WEST;</span>
+
+<span class="nc" id="L684">        panel.add(</span>
+                new JLabel(label),
+                gbc
+        );
+
+<span class="nc" id="L689">        gbc.gridx = 1;</span>
+<span class="nc" id="L690">        gbc.weightx = 1;</span>
+<span class="nc" id="L691">        gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+
+<span class="nc" id="L693">        panel.add(</span>
+                component,
+                gbc
+        );
+<span class="nc" id="L697">    }</span>
+
+    private void showMyListings() {
+
+<span class="nc" id="L701">        JDialog dialog = new JDialog(</span>
+                this,
+                &quot;My Listings&quot;,
+                true
+        );
+
+<span class="nc" id="L707">        dialog.setSize(750, 550);</span>
+<span class="nc" id="L708">        dialog.setLocationRelativeTo(this);</span>
+
+<span class="nc" id="L710">        JPanel listingsPanel = new JPanel();</span>
+
+<span class="nc" id="L712">        listingsPanel.setLayout(</span>
+                new BoxLayout(
+                        listingsPanel,
+                        BoxLayout.Y_AXIS
+                )
+        );
+
+<span class="nc" id="L719">        listingsPanel.setBackground(Color.WHITE);</span>
+
+<span class="nc" id="L721">        listingsPanel.setBorder(</span>
+<span class="nc" id="L722">                BorderFactory.createEmptyBorder(</span>
+                        20, 20, 20, 20
+                )
+        );
+
+<span class="nc" id="L727">        JLabel heading =</span>
+                new JLabel(&quot;My Listings&quot;);
+
+<span class="nc" id="L730">        heading.setFont(</span>
+                new Font(&quot;Arial&quot;, Font.BOLD, 24)
+        );
+
+<span class="nc" id="L734">        heading.setAlignmentX(</span>
+                Component.LEFT_ALIGNMENT
+        );
+
+<span class="nc" id="L738">        listingsPanel.add(heading);</span>
+<span class="nc" id="L739">        listingsPanel.add(</span>
+<span class="nc" id="L740">                Box.createVerticalStrut(20)</span>
+        );
+
+<span class="nc" id="L743">        boolean foundListing = false;</span>
+
+        for (Listing listing :
+<span class="nc bnc" id="L746" title="All 2 branches missed.">                DataStore.listings) {</span>
+
+<span class="nc" id="L748">            if (listing.getListerId()</span>
+<span class="nc bnc" id="L749" title="All 2 branches missed.">                    == currentLister.getUserId()) {</span>
+
+<span class="nc" id="L751">                foundListing = true;</span>
+
+<span class="nc" id="L753">                JPanel card = new JPanel();</span>
+
+<span class="nc" id="L755">                card.setLayout(</span>
+                        new BoxLayout(
+                                card,
+                                BoxLayout.Y_AXIS
+                        )
+                );
+
+<span class="nc" id="L762">                card.setBackground(Color.WHITE);</span>
+
+<span class="nc" id="L764">                card.setAlignmentX(</span>
+                        Component.LEFT_ALIGNMENT
+                );
+
+<span class="nc" id="L768">                card.setBorder(</span>
+<span class="nc" id="L769">                        BorderFactory.createCompoundBorder(</span>
+<span class="nc" id="L770">                                BorderFactory.createLineBorder(</span>
+                                        new Color(
+                                                255,
+                                                140,
+                                                0
+                                        ),
+                                        2
+                                ),
+<span class="nc" id="L778">                                BorderFactory.createEmptyBorder(</span>
+                                        15,
+                                        15,
+                                        15,
+                                        15
+                                )
+                        )
+                );
+
+<span class="nc bnc" id="L787" title="All 2 branches missed.">                if (listing.getImagePath() != null) {</span>
+
+<span class="nc" id="L789">                    File imageFile =</span>
+                            new File(
+<span class="nc" id="L791">                                    listing.getImagePath()</span>
+                            );
+
+<span class="nc bnc" id="L794" title="All 2 branches missed.">                    if (imageFile.exists()) {</span>
+
+<span class="nc" id="L796">                        ImageIcon originalIcon =</span>
+                                new ImageIcon(
+<span class="nc" id="L798">                                        listing.getImagePath()</span>
+                                );
+
+<span class="nc" id="L801">                        Image scaledImage =</span>
+                                originalIcon
+<span class="nc" id="L803">                                        .getImage()</span>
+<span class="nc" id="L804">                                        .getScaledInstance(</span>
+                                                220,
+                                                140,
+                                                Image.SCALE_SMOOTH
+                                        );
+
+<span class="nc" id="L810">                        JLabel imageLabel =</span>
+                                new JLabel(
+                                        new ImageIcon(
+                                                scaledImage
+                                        )
+                                );
+
+<span class="nc" id="L817">                        imageLabel.setAlignmentX(</span>
+                                Component.LEFT_ALIGNMENT
+                        );
+
+<span class="nc" id="L821">                        card.add(imageLabel);</span>
+<span class="nc" id="L822">                        card.add(</span>
+<span class="nc" id="L823">                                Box.createVerticalStrut(10)</span>
+                        );
+                    }
+                }
+
+<span class="nc" id="L828">                JLabel title =</span>
+                        new JLabel(
+<span class="nc" id="L830">                                listing.getTitle()</span>
+                        );
+
+<span class="nc" id="L833">                title.setFont(</span>
+                        new Font(
+                                &quot;Arial&quot;,
+                                Font.BOLD,
+                                18
+                        )
+                );
+
+<span class="nc" id="L841">                JLabel location =</span>
+                        new JLabel(
+                                &quot;Location: &quot;
+<span class="nc" id="L844">                                        + listing.getBorough()</span>
+                                        + &quot;, &quot;
+<span class="nc" id="L846">                                        + listing.getNeighbourhood()</span>
+                        );
+
+<span class="nc" id="L849">                JLabel price =</span>
+                        new JLabel(
+                                &quot;Price: €&quot;
+<span class="nc" id="L852">                                        + listing.getPrice()</span>
+                                        + &quot; per month&quot;
+                        );
+
+<span class="nc" id="L856">                JLabel dates =</span>
+                        new JLabel(
+                                &quot;Available: &quot;
+<span class="nc" id="L859">                                        + listing.getStartDate()</span>
+                                        + &quot; to &quot;
+<span class="nc" id="L861">                                        + listing.getEndDate()</span>
+                        );
+
+<span class="nc" id="L864">                JLabel roomType =</span>
+                        new JLabel(
+                                &quot;Room Type: &quot;
+<span class="nc" id="L867">                                        + listing.getRoomType()</span>
+                        );
+
+<span class="nc" id="L870">                JLabel description =</span>
+                        new JLabel(
+                                &quot;&lt;html&gt;Description: &quot;
+<span class="nc" id="L873">                                        + listing.getDescription()</span>
+                                        + &quot;&lt;/html&gt;&quot;
+                        );
+
+<span class="nc" id="L877">                card.add(title);</span>
+<span class="nc" id="L878">                card.add(Box.createVerticalStrut(8));</span>
+<span class="nc" id="L879">                card.add(location);</span>
+<span class="nc" id="L880">                card.add(price);</span>
+<span class="nc" id="L881">                card.add(dates);</span>
+<span class="nc" id="L882">                card.add(roomType);</span>
+<span class="nc" id="L883">                card.add(description);</span>
+
+<span class="nc" id="L885">                card.add(</span>
+<span class="nc" id="L886">                        Box.createVerticalStrut(12)</span>
+                );
+
+<span class="nc" id="L889">                JPanel buttonPanel =</span>
+                        new JPanel(
+                                new FlowLayout(
+                                        FlowLayout.LEFT
+                                )
+                        );
+
+<span class="nc" id="L896">                buttonPanel.setBackground(Color.WHITE);</span>
+
+<span class="nc" id="L898">                JButton editButton =</span>
+                        new JButton(&quot;Edit&quot;);
+
+<span class="nc" id="L901">                JButton deleteButton =</span>
+                        new JButton(&quot;Delete&quot;);
+
+<span class="nc" id="L904">                editButton.setBackground(</span>
+                        new Color(255, 140, 0)
+                );
+
+<span class="nc" id="L908">                editButton.setForeground(Color.WHITE);</span>
+<span class="nc" id="L909">                editButton.setFocusPainted(false);</span>
+<span class="nc" id="L910">                deleteButton.setFocusPainted(false);</span>
+
+<span class="nc" id="L912">                buttonPanel.add(editButton);</span>
+<span class="nc" id="L913">                buttonPanel.add(deleteButton);</span>
+
+<span class="nc" id="L915">                card.add(buttonPanel);</span>
+
+<span class="nc" id="L917">                editButton.addActionListener(e -&gt; {</span>
+
+<span class="nc" id="L919">                    dialog.dispose();</span>
+<span class="nc" id="L920">                    editListing(listing);</span>
+<span class="nc" id="L921">                });</span>
+
+<span class="nc" id="L923">                deleteButton.addActionListener(e -&gt; {</span>
+
+<span class="nc" id="L925">                    deleteListing(listing);</span>
+
+<span class="nc" id="L927">                    dialog.dispose();</span>
+<span class="nc" id="L928">                    showMyListings();</span>
+<span class="nc" id="L929">                });</span>
+
+<span class="nc" id="L931">                listingsPanel.add(card);</span>
+
+<span class="nc" id="L933">                listingsPanel.add(</span>
+<span class="nc" id="L934">                        Box.createVerticalStrut(15)</span>
+                );
+            }
+<span class="nc" id="L937">        }</span>
+
+<span class="nc bnc" id="L939" title="All 2 branches missed.">        if (!foundListing) {</span>
+
+<span class="nc" id="L941">            JLabel noListings =</span>
+                    new JLabel(
+                            &quot;You have not created any listings yet.&quot;
+                    );
+
+<span class="nc" id="L946">            noListings.setFont(</span>
+                    new Font(
+                            &quot;Arial&quot;,
+                            Font.PLAIN,
+                            16
+                    )
+            );
+
+<span class="nc" id="L954">            listingsPanel.add(noListings);</span>
+        }
+
+<span class="nc" id="L957">        JScrollPane scrollPane =</span>
+                new JScrollPane(listingsPanel);
+
+<span class="nc" id="L960">        scrollPane.setBorder(null);</span>
+
+<span class="nc" id="L962">        dialog.add(scrollPane);</span>
+<span class="nc" id="L963">        dialog.setVisible(true);</span>
+<span class="nc" id="L964">    }</span>
+
+    private void editListing(Listing listing) {
+
+<span class="nc" id="L968">        JTextField titleField =</span>
+                new JTextField(
+<span class="nc" id="L970">                        listing.getTitle(),</span>
+                        20
+                );
+
+<span class="nc" id="L974">        JTextField priceField =</span>
+                new JTextField(
+<span class="nc" id="L976">                        String.valueOf(</span>
+<span class="nc" id="L977">                                listing.getPrice()</span>
+                        ),
+                        20
+                );
+
+<span class="nc" id="L982">        JTextArea descriptionArea =</span>
+                new JTextArea(
+<span class="nc" id="L984">                        listing.getDescription(),</span>
+                        4,
+                        20
+                );
+
+<span class="nc" id="L989">        descriptionArea.setLineWrap(true);</span>
+<span class="nc" id="L990">        descriptionArea.setWrapStyleWord(true);</span>
+
+<span class="nc" id="L992">        JPanel editPanel =</span>
+                new JPanel(new GridBagLayout());
+
+<span class="nc" id="L995">        GridBagConstraints gbc =</span>
+                new GridBagConstraints();
+
+<span class="nc" id="L998">        gbc.insets =</span>
+                new Insets(8, 8, 8, 8);
+
+<span class="nc" id="L1001">        gbc.anchor =</span>
+                GridBagConstraints.WEST;
+
+<span class="nc" id="L1004">        addFormRow(</span>
+                editPanel,
+                gbc,
+                0,
+                &quot;Title:&quot;,
+                titleField
+        );
+
+<span class="nc" id="L1012">        addFormRow(</span>
+                editPanel,
+                gbc,
+                1,
+                &quot;Monthly Price (€):&quot;,
+                priceField
+        );
+
+<span class="nc" id="L1020">        JScrollPane descriptionScroll =</span>
+                new JScrollPane(
+                        descriptionArea
+                );
+
+<span class="nc" id="L1025">        descriptionScroll.setPreferredSize(</span>
+                new Dimension(250, 80)
+        );
+
+<span class="nc" id="L1029">        addFormRow(</span>
+                editPanel,
+                gbc,
+                2,
+                &quot;Description:&quot;,
+                descriptionScroll
+        );
+
+<span class="nc" id="L1037">        int result =</span>
+<span class="nc" id="L1038">                JOptionPane.showConfirmDialog(</span>
+                        this,
+                        editPanel,
+                        &quot;Edit Listing&quot;,
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.PLAIN_MESSAGE
+                );
+
+<span class="nc bnc" id="L1046" title="All 2 branches missed.">        if (result !=</span>
+                JOptionPane.OK_OPTION) {
+
+<span class="nc" id="L1049">            showMyListings();</span>
+<span class="nc" id="L1050">            return;</span>
+        }
+
+        try {
+
+<span class="nc" id="L1055">            String title =</span>
+<span class="nc" id="L1056">                    titleField.getText().trim();</span>
+
+<span class="nc" id="L1058">            String description =</span>
+                    descriptionArea
+<span class="nc" id="L1060">                            .getText()</span>
+<span class="nc" id="L1061">                            .trim();</span>
+
+<span class="nc bnc" id="L1063" title="All 2 branches missed.">            if (!Validator.notEmpty(title)</span>
+<span class="nc bnc" id="L1064" title="All 2 branches missed.">                    || !Validator.notEmpty(</span>
+<span class="nc" id="L1065">                            priceField.getText()</span>
+                    )
+<span class="nc bnc" id="L1067" title="All 2 branches missed.">                    || !Validator.notEmpty(</span>
+                            description
+                    )) {
+
+<span class="nc" id="L1071">                JOptionPane.showMessageDialog(</span>
+                        this,
+                        &quot;Please complete all required fields.&quot;,
+                        &quot;Invalid Input&quot;,
+                        JOptionPane.ERROR_MESSAGE
+                );
+
+<span class="nc" id="L1078">                showMyListings();</span>
+<span class="nc" id="L1079">                return;</span>
+            }
+
+<span class="nc" id="L1082">            double price =</span>
+<span class="nc" id="L1083">                    Double.parseDouble(</span>
+                            priceField
+<span class="nc" id="L1085">                                    .getText()</span>
+<span class="nc" id="L1086">                                    .trim()</span>
+                    );
+
+<span class="nc bnc" id="L1089" title="All 2 branches missed.">            if (!Validator.validPrice(price)) {</span>
+
+<span class="nc" id="L1091">                JOptionPane.showMessageDialog(</span>
+                        this,
+                        &quot;Price must be greater than zero.&quot;,
+                        &quot;Invalid Price&quot;,
+                        JOptionPane.ERROR_MESSAGE
+                );
+
+<span class="nc" id="L1098">                showMyListings();</span>
+<span class="nc" id="L1099">                return;</span>
+            }
+
+<span class="nc" id="L1102">            listing.setTitle(title);</span>
+<span class="nc" id="L1103">            listing.setPrice(price);</span>
+<span class="nc" id="L1104">            listing.setDescription(description);</span>
+
+<span class="nc" id="L1106">            JOptionPane.showMessageDialog(</span>
+                    this,
+                    &quot;Listing updated successfully.&quot;,
+                    &quot;Success&quot;,
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+<span class="nc" id="L1113">        } catch (NumberFormatException e) {</span>
+
+<span class="nc" id="L1115">            JOptionPane.showMessageDialog(</span>
+                    this,
+                    &quot;Please enter a valid price.&quot;,
+                    &quot;Invalid Price&quot;,
+                    JOptionPane.ERROR_MESSAGE
+            );
+<span class="nc" id="L1121">        }</span>
+
+<span class="nc" id="L1123">        showMyListings();</span>
+<span class="nc" id="L1124">    }</span>
+
+    private void deleteListing(
+            Listing listing) {
+
+<span class="nc" id="L1129">        int choice =</span>
+<span class="nc" id="L1130">                JOptionPane.showConfirmDialog(</span>
+                        this,
+                        &quot;Are you sure you want to delete this listing?&quot;,
+                        &quot;Delete Listing&quot;,
+                        JOptionPane.YES_NO_OPTION
+                );
+
+<span class="nc bnc" id="L1137" title="All 2 branches missed.">        if (choice ==</span>
+                JOptionPane.YES_OPTION) {
+
+<span class="nc" id="L1140">            DataStore.listings.remove(</span>
+                    listing
+            );
+
+<span class="nc" id="L1144">            DataStore.applications.removeIf(</span>
+                    application -&gt;
+<span class="nc" id="L1146">                            application.getListingId()</span>
+<span class="nc bnc" id="L1147" title="All 2 branches missed.">                                    == listing.getListingId()</span>
+            );
+
+<span class="nc" id="L1150">            JOptionPane.showMessageDialog(</span>
+                    this,
+                    &quot;Listing deleted successfully.&quot;,
+                    &quot;Success&quot;,
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        }
+<span class="nc" id="L1157">    }</span>
+
+    // Shows applications for this Lister's listings
+    private void showApplications() {
+
+<span class="nc" id="L1162">        JDialog dialog = new JDialog(</span>
+                this,
+                &quot;Manage Applications&quot;,
+                true
+        );
+
+<span class="nc" id="L1168">        dialog.setSize(750, 550);</span>
+<span class="nc" id="L1169">        dialog.setLocationRelativeTo(this);</span>
+
+<span class="nc" id="L1171">        JPanel applicationsPanel =</span>
+                new JPanel();
+
+<span class="nc" id="L1174">        applicationsPanel.setLayout(</span>
+                new BoxLayout(
+                        applicationsPanel,
+                        BoxLayout.Y_AXIS
+                )
+        );
+
+<span class="nc" id="L1181">        applicationsPanel.setBackground(</span>
+                Color.WHITE
+        );
+
+<span class="nc" id="L1185">        applicationsPanel.setBorder(</span>
+<span class="nc" id="L1186">                BorderFactory.createEmptyBorder(</span>
+                        20, 20, 20, 20
+                )
+        );
+
+<span class="nc" id="L1191">        JLabel heading =</span>
+                new JLabel(
+                        &quot;Manage Applications&quot;
+                );
+
+<span class="nc" id="L1196">        heading.setFont(</span>
+                new Font(
+                        &quot;Arial&quot;,
+                        Font.BOLD,
+                        24
+                )
+        );
+
+<span class="nc" id="L1204">        heading.setAlignmentX(</span>
+                Component.LEFT_ALIGNMENT
+        );
+
+<span class="nc" id="L1208">        applicationsPanel.add(heading);</span>
+
+<span class="nc" id="L1210">        applicationsPanel.add(</span>
+<span class="nc" id="L1211">                Box.createVerticalStrut(20)</span>
+        );
+
+<span class="nc" id="L1214">        boolean foundApplication = false;</span>
+
+        for (Application application :
+<span class="nc bnc" id="L1217" title="All 2 branches missed.">                DataStore.applications) {</span>
+
+<span class="nc" id="L1219">            Listing listing =</span>
+<span class="nc" id="L1220">                    findListing(</span>
+<span class="nc" id="L1221">                            application.getListingId()</span>
+                    );
+
+<span class="nc bnc" id="L1224" title="All 2 branches missed.">            if (listing != null</span>
+<span class="nc" id="L1225">                    &amp;&amp; listing.getListerId()</span>
+<span class="nc bnc" id="L1226" title="All 2 branches missed.">                    == currentLister.getUserId()) {</span>
+
+<span class="nc" id="L1228">                foundApplication = true;</span>
+
+<span class="nc" id="L1230">                JPanel card =</span>
+                        new JPanel();
+
+<span class="nc" id="L1233">                card.setLayout(</span>
+                        new BoxLayout(
+                                card,
+                                BoxLayout.Y_AXIS
+                        )
+                );
+
+<span class="nc" id="L1240">                card.setBackground(Color.WHITE);</span>
+
+<span class="nc" id="L1242">                card.setAlignmentX(</span>
+                        Component.LEFT_ALIGNMENT
+                );
+
+<span class="nc" id="L1246">                card.setBorder(</span>
+<span class="nc" id="L1247">                        BorderFactory.createCompoundBorder(</span>
+<span class="nc" id="L1248">                                BorderFactory.createLineBorder(</span>
+                                        new Color(
+                                                255,
+                                                140,
+                                                0
+                                        ),
+                                        2
+                                ),
+<span class="nc" id="L1256">                                BorderFactory.createEmptyBorder(</span>
+                                        15,
+                                        15,
+                                        15,
+                                        15
+                                )
+                        )
+                );
+
+<span class="nc" id="L1265">                JLabel listingTitle =</span>
+                        new JLabel(
+<span class="nc" id="L1267">                                listing.getTitle()</span>
+                        );
+
+<span class="nc" id="L1270">                listingTitle.setFont(</span>
+                        new Font(
+                                &quot;Arial&quot;,
+                                Font.BOLD,
+                                18
+                        )
+                );
+
+<span class="nc" id="L1278">                JLabel student =</span>
+                        new JLabel(
+                                &quot;Student ID: &quot;
+<span class="nc" id="L1281">                                        + application.getStudentId()</span>
+                        );
+
+<span class="nc" id="L1284">                JLabel status =</span>
+                        new JLabel(
+                                &quot;Status: &quot;
+<span class="nc" id="L1287">                                        + application.getStatus()</span>
+                        );
+
+<span class="nc" id="L1290">                JLabel date =</span>
+                        new JLabel(
+                                &quot;Applied: &quot;
+<span class="nc" id="L1293">                                        + application.getAppliedAt()</span>
+                        );
+
+<span class="nc" id="L1296">                card.add(listingTitle);</span>
+
+<span class="nc" id="L1298">                card.add(</span>
+<span class="nc" id="L1299">                        Box.createVerticalStrut(8)</span>
+                );
+
+<span class="nc" id="L1302">                card.add(student);</span>
+<span class="nc" id="L1303">                card.add(status);</span>
+<span class="nc" id="L1304">                card.add(date);</span>
+
+<span class="nc bnc" id="L1306" title="All 2 branches missed.">                if (&quot;Pending&quot;.equalsIgnoreCase(</span>
+<span class="nc" id="L1307">                        application.getStatus()</span>
+                )) {
+
+<span class="nc" id="L1310">                    card.add(</span>
+<span class="nc" id="L1311">                            Box.createVerticalStrut(10)</span>
+                    );
+
+<span class="nc" id="L1314">                    JPanel buttons =</span>
+                            new JPanel(
+                                    new FlowLayout(
+                                            FlowLayout.LEFT
+                                    )
+                            );
+
+<span class="nc" id="L1321">                    buttons.setBackground(</span>
+                            Color.WHITE
+                    );
+
+<span class="nc" id="L1325">                    JButton acceptButton =</span>
+                            new JButton(&quot;Accept&quot;);
+
+<span class="nc" id="L1328">                    JButton rejectButton =</span>
+                            new JButton(&quot;Reject&quot;);
+
+<span class="nc" id="L1331">                    acceptButton.setBackground(</span>
+                            new Color(
+                                    255,
+                                    140,
+                                    0
+                            )
+                    );
+
+<span class="nc" id="L1339">                    acceptButton.setForeground(</span>
+                            Color.WHITE
+                    );
+
+<span class="nc" id="L1343">                    acceptButton.setFocusPainted(</span>
+                            false
+                    );
+
+<span class="nc" id="L1347">                    rejectButton.setFocusPainted(</span>
+                            false
+                    );
+
+<span class="nc" id="L1351">                    acceptButton.addActionListener(</span>
+                            e -&gt; {
+
+<span class="nc" id="L1354">                                application.setStatus(</span>
+                                        &quot;Accepted&quot;
+                                );
+
+<span class="nc" id="L1358">                                JOptionPane.showMessageDialog(</span>
+                                        dialog,
+                                        &quot;Application accepted.&quot;
+                                );
+
+<span class="nc" id="L1363">                                dialog.dispose();</span>
+<span class="nc" id="L1364">                                showApplications();</span>
+<span class="nc" id="L1365">                            }</span>
+                    );
+
+<span class="nc" id="L1368">                    rejectButton.addActionListener(</span>
+                            e -&gt; {
+
+<span class="nc" id="L1371">                                application.setStatus(</span>
+                                        &quot;Rejected&quot;
+                                );
+
+<span class="nc" id="L1375">                                JOptionPane.showMessageDialog(</span>
+                                        dialog,
+                                        &quot;Application rejected.&quot;
+                                );
+
+<span class="nc" id="L1380">                                dialog.dispose();</span>
+<span class="nc" id="L1381">                                showApplications();</span>
+<span class="nc" id="L1382">                            }</span>
+                    );
+
+<span class="nc" id="L1385">                    buttons.add(acceptButton);</span>
+<span class="nc" id="L1386">                    buttons.add(rejectButton);</span>
+
+<span class="nc" id="L1388">                    card.add(buttons);</span>
+                }
+
+<span class="nc" id="L1391">                applicationsPanel.add(card);</span>
+
+<span class="nc" id="L1393">                applicationsPanel.add(</span>
+<span class="nc" id="L1394">                        Box.createVerticalStrut(15)</span>
+                );
+            }
+<span class="nc" id="L1397">        }</span>
+
+<span class="nc bnc" id="L1399" title="All 2 branches missed.">        if (!foundApplication) {</span>
+
+<span class="nc" id="L1401">            JLabel noApplications =</span>
+                    new JLabel(
+                            &quot;No applications have been submitted yet.&quot;
+                    );
+
+<span class="nc" id="L1406">            noApplications.setFont(</span>
+                    new Font(
+                            &quot;Arial&quot;,
+                            Font.PLAIN,
+                            16
+                    )
+            );
+
+<span class="nc" id="L1414">            applicationsPanel.add(</span>
+                    noApplications
+            );
+        }
+
+<span class="nc" id="L1419">        JScrollPane scrollPane =</span>
+                new JScrollPane(
+                        applicationsPanel
+                );
+
+<span class="nc" id="L1424">        scrollPane.setBorder(null);</span>
+
+<span class="nc" id="L1426">        dialog.add(scrollPane);</span>
+<span class="nc" id="L1427">        dialog.setVisible(true);</span>
+<span class="nc" id="L1428">    }</span>
+
+    private Listing findListing(
+            int listingId) {
+
+        for (Listing listing :
+<span class="nc bnc" id="L1434" title="All 2 branches missed.">                DataStore.listings) {</span>
+
+<span class="nc bnc" id="L1436" title="All 2 branches missed.">            if (listing.getListingId()</span>
+                    == listingId) {
+
+<span class="nc" id="L1439">                return listing;</span>
+            }
+<span class="nc" id="L1441">        }</span>
+
+<span class="nc" id="L1443">        return null;</span>
+    }
+
+    private void showProfile() {
+
+<span class="nc" id="L1448">        JOptionPane.showMessageDialog(</span>
+                this,
+                &quot;Name: &quot;
+<span class="nc" id="L1451">                        + currentLister.getName()</span>
+                        + &quot;\nEmail: &quot;
+<span class="nc" id="L1453">                        + currentLister.getEmail()</span>
+                        + &quot;\nRole: &quot;
+<span class="nc" id="L1455">                        + currentLister.getRole(),</span>
+                &quot;Profile&quot;,
+                JOptionPane.INFORMATION_MESSAGE
+        );
+<span class="nc" id="L1459">    }</span>
+
+    private void logout() {
+
+<span class="nc" id="L1463">        int choice =</span>
+<span class="nc" id="L1464">                JOptionPane.showConfirmDialog(</span>
+                        this,
+                        &quot;Are you sure you want to logout?&quot;,
+                        &quot;Logout&quot;,
+                        JOptionPane.YES_NO_OPTION
+                );
+
+<span class="nc bnc" id="L1471" title="All 2 branches missed.">        if (choice ==</span>
+                JOptionPane.YES_OPTION) {
+
+<span class="nc" id="L1474">            dispose();</span>
+        }
+<span class="nc" id="L1476">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

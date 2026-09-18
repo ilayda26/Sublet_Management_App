@@ -1,0 +1,22 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+sublet-management-system,default,LoginFrame,378,0,8,0,103,0,10,0,6,0
+sublet-management-system,default,User,45,0,0,0,18,0,9,0,9,0
+sublet-management-system,default,Report,43,0,0,0,16,0,8,0,8,0
+sublet-management-system,default,Lister,9,0,0,0,3,0,2,0,2,0
+sublet-management-system,default,MarketplaceDashboard.RoundedButton,109,0,2,0,31,0,4,0,3,0
+sublet-management-system,default,ListerDashboard,1964,0,70,0,528,0,60,0,25,0
+sublet-management-system,default,MarketplaceDashboard.RoundedPanel,75,0,2,0,21,0,3,0,2,0
+sublet-management-system,default,Admin,9,0,0,0,3,0,2,0,2,0
+sublet-management-system,default,Student,9,0,0,0,3,0,2,0,2,0
+sublet-management-system,default,RegisterFrame,469,0,14,0,124,0,13,0,6,0
+sublet-management-system,default,BerlinLocations,509,0,4,0,22,0,7,0,5,0
+sublet-management-system,default,Listing,96,0,0,0,36,0,19,0,19,0
+sublet-management-system,default,DataStore,265,0,40,0,76,0,32,0,12,0
+sublet-management-system,default,Database,584,0,24,0,244,0,25,0,13,0
+sublet-management-system,default,MarketplaceDashboard,3082,0,112,0,802,0,103,0,47,0
+sublet-management-system,default,StudentDashboard,1842,0,110,0,505,0,81,0,26,0
+sublet-management-system,default,Application,40,0,0,0,15,0,7,0,7,0
+sublet-management-system,default,Main,14,0,0,0,7,0,2,0,2,0
+sublet-management-system,default,MarketplaceDashboard.RoundedButton.new MouseAdapter() {...},46,0,4,0,11,0,5,0,3,0
+sublet-management-system,default,AdminDashboard,1101,0,30,0,309,0,45,0,30,0
+sublet-management-system,default,Validator,16,41,11,11,2,7,11,6,2,4

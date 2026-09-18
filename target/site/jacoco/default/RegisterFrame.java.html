@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RegisterFrame.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sublet-management-system</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">RegisterFrame.java</span></div><h1>RegisterFrame.java</h1><pre class="source lang-java linenums">import javax.swing.*;
+import java.awt.*;
+
+public class RegisterFrame extends JFrame {
+
+    private JTextField nameField;
+    private JTextField emailField;
+    private JPasswordField passwordField;
+    private JComboBox&lt;String&gt; roleBox;
+
+<span class="nc" id="L11">    private final Color orange =</span>
+            new Color(240, 120, 30);
+
+<span class="nc" id="L14">    public RegisterFrame() {</span>
+
+<span class="nc" id="L16">        setTitle(&quot;Berlin Sublet - Register&quot;);</span>
+<span class="nc" id="L17">        setSize(650, 600);</span>
+<span class="nc" id="L18">        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</span>
+<span class="nc" id="L19">        setLocationRelativeTo(null);</span>
+<span class="nc" id="L20">        setResizable(false);</span>
+
+<span class="nc" id="L22">        JPanel mainPanel =</span>
+                new JPanel(new BorderLayout());
+
+<span class="nc" id="L25">        mainPanel.setBackground(Color.WHITE);</span>
+
+        // Header
+<span class="nc" id="L28">        JPanel header =</span>
+                new JPanel();
+
+<span class="nc" id="L31">        header.setBackground(orange);</span>
+
+<span class="nc" id="L33">        header.setBorder(</span>
+<span class="nc" id="L34">                BorderFactory.createEmptyBorder(</span>
+                        20, 20, 20, 20
+                )
+        );
+
+<span class="nc" id="L39">        JLabel logo =</span>
+                new JLabel(&quot;BERLIN SUBLET&quot;);
+
+<span class="nc" id="L42">        logo.setForeground(Color.WHITE);</span>
+
+<span class="nc" id="L44">        logo.setFont(</span>
+                new Font(
+                        &quot;Arial&quot;,
+                        Font.BOLD,
+                        26
+                )
+        );
+
+<span class="nc" id="L52">        header.add(logo);</span>
+
+<span class="nc" id="L54">        mainPanel.add(</span>
+                header,
+                BorderLayout.NORTH
+        );
+
+        // Form area
+<span class="nc" id="L60">        JPanel formWrapper =</span>
+                new JPanel(
+                        new GridBagLayout()
+                );
+
+<span class="nc" id="L65">        formWrapper.setBackground(Color.WHITE);</span>
+
+<span class="nc" id="L67">        JPanel form =</span>
+                new JPanel();
+
+<span class="nc" id="L70">        form.setLayout(</span>
+                new BoxLayout(
+                        form,
+                        BoxLayout.Y_AXIS
+                )
+        );
+
+<span class="nc" id="L77">        form.setBackground(Color.WHITE);</span>
+
+<span class="nc" id="L79">        form.setPreferredSize(</span>
+                new Dimension(
+                        360,
+                        380
+                )
+        );
+
+<span class="nc" id="L86">        JLabel heading =</span>
+                new JLabel(
+                        &quot;Create your account&quot;
+                );
+
+<span class="nc" id="L91">        heading.setFont(</span>
+                new Font(
+                        &quot;Arial&quot;,
+                        Font.BOLD,
+                        24
+                )
+        );
+
+<span class="nc" id="L99">        heading.setAlignmentX(</span>
+                Component.LEFT_ALIGNMENT
+        );
+
+<span class="nc" id="L103">        JLabel subtitle =</span>
+                new JLabel(
+                        &quot;Find a sublet or list your own room.&quot;
+                );
+
+<span class="nc" id="L108">        subtitle.setForeground(Color.GRAY);</span>
+
+<span class="nc" id="L110">        subtitle.setAlignmentX(</span>
+                Component.LEFT_ALIGNMENT
+        );
+
+<span class="nc" id="L114">        nameField =</span>
+                new JTextField();
+
+<span class="nc" id="L117">        emailField =</span>
+                new JTextField();
+
+<span class="nc" id="L120">        passwordField =</span>
+                new JPasswordField();
+
+<span class="nc" id="L123">        String[] roles = {</span>
+                &quot;Student&quot;,
+                &quot;Lister&quot;
+        };
+
+<span class="nc" id="L128">        roleBox =</span>
+                new JComboBox&lt;&gt;(roles);
+
+<span class="nc" id="L131">        setFieldSize(nameField);</span>
+<span class="nc" id="L132">        setFieldSize(emailField);</span>
+<span class="nc" id="L133">        setFieldSize(passwordField);</span>
+<span class="nc" id="L134">        setFieldSize(roleBox);</span>
+
+<span class="nc" id="L136">        JButton registerButton =</span>
+                new JButton(
+                        &quot;Create Account&quot;
+                );
+
+<span class="nc" id="L141">        registerButton.setBackground(</span>
+                orange
+        );
+
+<span class="nc" id="L145">        registerButton.setForeground(</span>
+                Color.WHITE
+        );
+
+<span class="nc" id="L149">        registerButton.setFocusPainted(</span>
+                false
+        );
+
+<span class="nc" id="L153">        registerButton.setAlignmentX(</span>
+                Component.LEFT_ALIGNMENT
+        );
+
+<span class="nc" id="L157">        registerButton.setMaximumSize(</span>
+                new Dimension(
+                        360,
+                        40
+                )
+        );
+
+<span class="nc" id="L164">        JButton loginButton =</span>
+                new JButton(
+                        &quot;Already have an account? Login&quot;
+                );
+
+<span class="nc" id="L169">        loginButton.setBorderPainted(false);</span>
+<span class="nc" id="L170">        loginButton.setContentAreaFilled(false);</span>
+<span class="nc" id="L171">        loginButton.setForeground(orange);</span>
+<span class="nc" id="L172">        loginButton.setFocusPainted(false);</span>
+
+<span class="nc" id="L174">        loginButton.setAlignmentX(</span>
+                Component.LEFT_ALIGNMENT
+        );
+
+<span class="nc" id="L178">        form.add(heading);</span>
+
+<span class="nc" id="L180">        form.add(</span>
+<span class="nc" id="L181">                Box.createVerticalStrut(5)</span>
+        );
+
+<span class="nc" id="L184">        form.add(subtitle);</span>
+
+<span class="nc" id="L186">        form.add(</span>
+<span class="nc" id="L187">                Box.createVerticalStrut(25)</span>
+        );
+
+<span class="nc" id="L190">        addField(</span>
+                form,
+                &quot;Name&quot;,
+                nameField
+        );
+
+<span class="nc" id="L196">        addField(</span>
+                form,
+                &quot;Email&quot;,
+                emailField
+        );
+
+<span class="nc" id="L202">        addField(</span>
+                form,
+                &quot;Password&quot;,
+                passwordField
+        );
+
+<span class="nc" id="L208">        addField(</span>
+                form,
+                &quot;Account Type&quot;,
+                roleBox
+        );
+
+<span class="nc" id="L214">        form.add(</span>
+<span class="nc" id="L215">                Box.createVerticalStrut(18)</span>
+        );
+
+<span class="nc" id="L218">        form.add(registerButton);</span>
+
+<span class="nc" id="L220">        form.add(</span>
+<span class="nc" id="L221">                Box.createVerticalStrut(8)</span>
+        );
+
+<span class="nc" id="L224">        form.add(loginButton);</span>
+
+<span class="nc" id="L226">        formWrapper.add(form);</span>
+
+<span class="nc" id="L228">        mainPanel.add(</span>
+                formWrapper,
+                BorderLayout.CENTER
+        );
+
+<span class="nc" id="L233">        registerButton.addActionListener(</span>
+<span class="nc" id="L234">                e -&gt; registerUser()</span>
+        );
+
+<span class="nc" id="L237">        loginButton.addActionListener(e -&gt; {</span>
+
+<span class="nc" id="L239">            dispose();</span>
+
+<span class="nc" id="L241">            new LoginFrame();</span>
+<span class="nc" id="L242">        });</span>
+
+<span class="nc" id="L244">        add(mainPanel);</span>
+
+<span class="nc" id="L246">        setVisible(true);</span>
+<span class="nc" id="L247">    }</span>
+
+    private void setFieldSize(
+            JComponent component) {
+
+<span class="nc" id="L252">        component.setMaximumSize(</span>
+                new Dimension(
+                        360,
+                        34
+                )
+        );
+
+<span class="nc" id="L259">        component.setPreferredSize(</span>
+                new Dimension(
+                        360,
+                        34
+                )
+        );
+
+<span class="nc" id="L266">        component.setAlignmentX(</span>
+                Component.LEFT_ALIGNMENT
+        );
+<span class="nc" id="L269">    }</span>
+
+    private void addField(
+            JPanel panel,
+            String label,
+            JComponent field) {
+
+<span class="nc" id="L276">        JLabel fieldLabel =</span>
+                new JLabel(label);
+
+<span class="nc" id="L279">        fieldLabel.setAlignmentX(</span>
+                Component.LEFT_ALIGNMENT
+        );
+
+<span class="nc" id="L283">        panel.add(fieldLabel);</span>
+
+<span class="nc" id="L285">        panel.add(</span>
+<span class="nc" id="L286">                Box.createVerticalStrut(4)</span>
+        );
+
+<span class="nc" id="L289">        panel.add(field);</span>
+
+<span class="nc" id="L291">        panel.add(</span>
+<span class="nc" id="L292">                Box.createVerticalStrut(12)</span>
+        );
+<span class="nc" id="L294">    }</span>
+
+    private void registerUser() {
+
+<span class="nc" id="L298">        String name =</span>
+                nameField
+<span class="nc" id="L300">                        .getText()</span>
+<span class="nc" id="L301">                        .trim();</span>
+
+<span class="nc" id="L303">        String email =</span>
+                emailField
+<span class="nc" id="L305">                        .getText()</span>
+<span class="nc" id="L306">                        .trim();</span>
+
+<span class="nc" id="L308">        String password =</span>
+                new String(
+                        passwordField
+<span class="nc" id="L311">                                .getPassword()</span>
+                );
+
+<span class="nc" id="L314">        String role =</span>
+                (String)
+                        roleBox
+<span class="nc" id="L317">                                .getSelectedItem();</span>
+
+<span class="nc bnc" id="L319" title="All 2 branches missed.">        if (!Validator.notEmpty(name)</span>
+<span class="nc bnc" id="L320" title="All 2 branches missed.">                || !Validator.notEmpty(email)</span>
+<span class="nc bnc" id="L321" title="All 2 branches missed.">                || !Validator.notEmpty(password)) {</span>
+
+<span class="nc" id="L323">            JOptionPane.showMessageDialog(</span>
+                    this,
+                    &quot;Please complete all fields.&quot;,
+                    &quot;Invalid Input&quot;,
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+<span class="nc" id="L330">            return;</span>
+        }
+
+<span class="nc bnc" id="L333" title="All 2 branches missed.">        if (!Validator.validEmail(email)) {</span>
+
+<span class="nc" id="L335">            JOptionPane.showMessageDialog(</span>
+                    this,
+                    &quot;Please enter a valid email address.&quot;,
+                    &quot;Invalid Email&quot;,
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+<span class="nc" id="L342">            return;</span>
+        }
+
+<span class="nc bnc" id="L345" title="All 2 branches missed.">        if (!Validator.validPassword(</span>
+                password
+        )) {
+
+<span class="nc" id="L349">            JOptionPane.showMessageDialog(</span>
+                    this,
+                    &quot;Password must contain at least 6 characters.&quot;,
+                    &quot;Invalid Password&quot;,
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+<span class="nc" id="L356">            return;</span>
+        }
+
+<span class="nc bnc" id="L359" title="All 2 branches missed.">        if (DataStore.emailExists(email)) {</span>
+
+<span class="nc" id="L361">            JOptionPane.showMessageDialog(</span>
+                    this,
+                    &quot;An account with this email already exists.&quot;,
+                    &quot;Email Already Registered&quot;,
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+<span class="nc" id="L368">            return;</span>
+        }
+
+        int userId =
+<span class="nc" id="L372">                DataStore.getNextUserId();</span>
+
+        User user;
+
+<span class="nc bnc" id="L376" title="All 2 branches missed.">        if (&quot;Lister&quot;.equals(role)) {</span>
+
+<span class="nc" id="L378">            user =</span>
+                    new Lister(
+                            userId,
+                            name,
+                            email,
+                            password
+                    );
+
+        } else {
+
+<span class="nc" id="L388">            user =</span>
+                    new Student(
+                            userId,
+                            name,
+                            email,
+                            password
+                    );
+        }
+
+<span class="nc" id="L397">        DataStore.users.add(user);</span>
+
+<span class="nc" id="L399">        JOptionPane.showMessageDialog(</span>
+                this,
+                &quot;Account created successfully.&quot;,
+                &quot;Registration Complete&quot;,
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+<span class="nc" id="L406">        dispose();</span>
+
+<span class="nc" id="L408">        new LoginFrame();</span>
+<span class="nc" id="L409">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

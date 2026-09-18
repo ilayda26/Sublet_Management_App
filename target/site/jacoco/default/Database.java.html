@@ -1,0 +1,713 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Database.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sublet-management-system</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Database.java</span></div><h1>Database.java</h1><pre class="source lang-java linenums">import java.sql.*;
+import java.time.LocalDate;
+
+<span class="nc" id="L4">public class Database {</span>
+
+    private static final String URL =
+            &quot;jdbc:sqlite:sublet.db&quot;;
+
+    public static void initialize() {
+
+<span class="nc" id="L11">        try (Connection connection =</span>
+<span class="nc" id="L12">                     DriverManager.getConnection(URL);</span>
+
+<span class="nc" id="L14">             Statement statement =</span>
+<span class="nc" id="L15">                     connection.createStatement()) {</span>
+
+<span class="nc" id="L17">            statement.execute(&quot;&quot;&quot;</span>
+                    CREATE TABLE IF NOT EXISTS users (
+                        user_id INTEGER PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        email TEXT NOT NULL UNIQUE,
+                        password TEXT NOT NULL,
+                        role TEXT NOT NULL
+                    )
+                    &quot;&quot;&quot;);
+
+<span class="nc" id="L27">            statement.execute(&quot;&quot;&quot;</span>
+                    CREATE TABLE IF NOT EXISTS listings (
+                        listing_id INTEGER PRIMARY KEY,
+                        lister_id INTEGER NOT NULL,
+                        title TEXT NOT NULL,
+                        borough TEXT NOT NULL,
+                        neighbourhood TEXT NOT NULL,
+                        price REAL NOT NULL,
+                        start_date TEXT NOT NULL,
+                        end_date TEXT NOT NULL,
+                        room_type TEXT NOT NULL,
+                        description TEXT,
+                        image_path TEXT
+                    )
+                    &quot;&quot;&quot;);
+
+<span class="nc" id="L43">            statement.execute(&quot;&quot;&quot;</span>
+                    CREATE TABLE IF NOT EXISTS applications (
+                        application_id INTEGER PRIMARY KEY,
+                        student_id INTEGER NOT NULL,
+                        listing_id INTEGER NOT NULL,
+                        status TEXT NOT NULL
+                    )
+                    &quot;&quot;&quot;);
+
+<span class="nc" id="L52">            statement.execute(&quot;&quot;&quot;</span>
+                    CREATE TABLE IF NOT EXISTS reports (
+                        report_id INTEGER PRIMARY KEY,
+                        student_id INTEGER NOT NULL,
+                        listing_id INTEGER NOT NULL,
+                        reason TEXT NOT NULL,
+                        status TEXT NOT NULL
+                    )
+                    &quot;&quot;&quot;);
+
+<span class="nc" id="L62">            System.out.println(</span>
+                    &quot;Database ready.&quot;
+            );
+
+<span class="nc" id="L66">        } catch (SQLException e) {</span>
+
+<span class="nc" id="L68">            System.out.println(</span>
+                    &quot;Database error: &quot;
+<span class="nc" id="L70">                            + e.getMessage()</span>
+            );
+<span class="nc" id="L72">        }</span>
+<span class="nc" id="L73">    }</span>
+
+    public static void loadData() {
+
+<span class="nc" id="L77">        DataStore.users.clear();</span>
+<span class="nc" id="L78">        DataStore.listings.clear();</span>
+<span class="nc" id="L79">        DataStore.applications.clear();</span>
+<span class="nc" id="L80">        DataStore.reports.clear();</span>
+
+<span class="nc" id="L82">        loadUsers();</span>
+<span class="nc" id="L83">        loadListings();</span>
+<span class="nc" id="L84">        loadApplications();</span>
+<span class="nc" id="L85">        loadReports();</span>
+
+        // Makes sure there is always an admin account
+<span class="nc" id="L88">        DataStore.ensureAdmin();</span>
+
+        // Prevent duplicate IDs after restart
+<span class="nc" id="L91">        DataStore.recalculateIds();</span>
+
+<span class="nc" id="L93">        System.out.println(</span>
+                &quot;Database data loaded.&quot;
+        );
+<span class="nc" id="L96">    }</span>
+
+    private static void loadUsers() {
+
+<span class="nc" id="L100">        String sql =</span>
+                &quot;SELECT * FROM users&quot;;
+
+<span class="nc" id="L103">        try (Connection connection =</span>
+<span class="nc" id="L104">                     DriverManager.getConnection(URL);</span>
+
+<span class="nc" id="L106">             Statement statement =</span>
+<span class="nc" id="L107">                     connection.createStatement();</span>
+
+<span class="nc" id="L109">             ResultSet results =</span>
+<span class="nc" id="L110">                     statement.executeQuery(sql)) {</span>
+
+<span class="nc bnc" id="L112" title="All 2 branches missed.">            while (results.next()) {</span>
+
+<span class="nc" id="L114">                int id =</span>
+<span class="nc" id="L115">                        results.getInt(</span>
+                                &quot;user_id&quot;
+                        );
+
+<span class="nc" id="L119">                String name =</span>
+<span class="nc" id="L120">                        results.getString(</span>
+                                &quot;name&quot;
+                        );
+
+<span class="nc" id="L124">                String email =</span>
+<span class="nc" id="L125">                        results.getString(</span>
+                                &quot;email&quot;
+                        );
+
+<span class="nc" id="L129">                String password =</span>
+<span class="nc" id="L130">                        results.getString(</span>
+                                &quot;password&quot;
+                        );
+
+<span class="nc" id="L134">                String role =</span>
+<span class="nc" id="L135">                        results.getString(</span>
+                                &quot;role&quot;
+                        );
+
+                User user;
+
+<span class="nc bnc" id="L141" title="All 2 branches missed.">                if (&quot;Admin&quot;.equalsIgnoreCase(role)) {</span>
+
+<span class="nc" id="L143">                    user =</span>
+                            new Admin(
+                                    id,
+                                    name,
+                                    email,
+                                    password
+                            );
+
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                } else if (&quot;Lister&quot;.equalsIgnoreCase(role)) {</span>
+
+<span class="nc" id="L153">                    user =</span>
+                            new Lister(
+                                    id,
+                                    name,
+                                    email,
+                                    password
+                            );
+
+                } else {
+
+<span class="nc" id="L163">                    user =</span>
+                            new Student(
+                                    id,
+                                    name,
+                                    email,
+                                    password
+                            );
+                }
+
+<span class="nc" id="L172">                DataStore.users.add(</span>
+                        user
+                );
+<span class="nc" id="L175">            }</span>
+
+<span class="nc" id="L177">        } catch (SQLException e) {</span>
+
+<span class="nc" id="L179">            System.out.println(</span>
+                    &quot;Could not load users: &quot;
+<span class="nc" id="L181">                            + e.getMessage()</span>
+            );
+<span class="nc" id="L183">        }</span>
+<span class="nc" id="L184">    }</span>
+
+    private static void loadListings() {
+
+<span class="nc" id="L188">        String sql =</span>
+                &quot;SELECT * FROM listings&quot;;
+
+<span class="nc" id="L191">        try (Connection connection =</span>
+<span class="nc" id="L192">                     DriverManager.getConnection(URL);</span>
+
+<span class="nc" id="L194">             Statement statement =</span>
+<span class="nc" id="L195">                     connection.createStatement();</span>
+
+<span class="nc" id="L197">             ResultSet results =</span>
+<span class="nc" id="L198">                     statement.executeQuery(sql)) {</span>
+
+<span class="nc bnc" id="L200" title="All 2 branches missed.">            while (results.next()) {</span>
+
+<span class="nc" id="L202">                Listing listing =</span>
+                        new Listing(
+<span class="nc" id="L204">                                results.getInt(</span>
+                                        &quot;listing_id&quot;
+                                ),
+
+<span class="nc" id="L208">                                results.getInt(</span>
+                                        &quot;lister_id&quot;
+                                ),
+
+<span class="nc" id="L212">                                results.getString(</span>
+                                        &quot;title&quot;
+                                ),
+
+<span class="nc" id="L216">                                results.getString(</span>
+                                        &quot;borough&quot;
+                                ),
+
+<span class="nc" id="L220">                                results.getString(</span>
+                                        &quot;neighbourhood&quot;
+                                ),
+
+<span class="nc" id="L224">                                results.getDouble(</span>
+                                        &quot;price&quot;
+                                ),
+
+<span class="nc" id="L228">                                LocalDate.parse(</span>
+<span class="nc" id="L229">                                        results.getString(</span>
+                                                &quot;start_date&quot;
+                                        )
+                                ),
+
+<span class="nc" id="L234">                                LocalDate.parse(</span>
+<span class="nc" id="L235">                                        results.getString(</span>
+                                                &quot;end_date&quot;
+                                        )
+                                ),
+
+<span class="nc" id="L240">                                results.getString(</span>
+                                        &quot;room_type&quot;
+                                ),
+
+<span class="nc" id="L244">                                results.getString(</span>
+                                        &quot;description&quot;
+                                )
+                        );
+
+<span class="nc" id="L249">                String imagePath =</span>
+<span class="nc" id="L250">                        results.getString(</span>
+                                &quot;image_path&quot;
+                        );
+
+<span class="nc bnc" id="L254" title="All 2 branches missed.">                if (imagePath != null</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">                        &amp;&amp; !imagePath.isEmpty()) {</span>
+
+<span class="nc" id="L257">                    listing.setImagePath(</span>
+                            imagePath
+                    );
+                }
+
+<span class="nc" id="L262">                DataStore.listings.add(</span>
+                        listing
+                );
+<span class="nc" id="L265">            }</span>
+
+<span class="nc" id="L267">        } catch (SQLException e) {</span>
+
+<span class="nc" id="L269">            System.out.println(</span>
+                    &quot;Could not load listings: &quot;
+<span class="nc" id="L271">                            + e.getMessage()</span>
+            );
+<span class="nc" id="L273">        }</span>
+<span class="nc" id="L274">    }</span>
+
+    private static void loadApplications() {
+
+<span class="nc" id="L278">        String sql =</span>
+                &quot;SELECT * FROM applications&quot;;
+
+<span class="nc" id="L281">        try (Connection connection =</span>
+<span class="nc" id="L282">                     DriverManager.getConnection(URL);</span>
+
+<span class="nc" id="L284">             Statement statement =</span>
+<span class="nc" id="L285">                     connection.createStatement();</span>
+
+<span class="nc" id="L287">             ResultSet results =</span>
+<span class="nc" id="L288">                     statement.executeQuery(sql)) {</span>
+
+<span class="nc bnc" id="L290" title="All 2 branches missed.">            while (results.next()) {</span>
+
+<span class="nc" id="L292">                Application application =</span>
+                        new Application(
+<span class="nc" id="L294">                                results.getInt(</span>
+                                        &quot;application_id&quot;
+                                ),
+
+<span class="nc" id="L298">                                results.getInt(</span>
+                                        &quot;student_id&quot;
+                                ),
+
+<span class="nc" id="L302">                                results.getInt(</span>
+                                        &quot;listing_id&quot;
+                                )
+                        );
+
+<span class="nc" id="L307">                application.setStatus(</span>
+<span class="nc" id="L308">                        results.getString(</span>
+                                &quot;status&quot;
+                        )
+                );
+
+<span class="nc" id="L313">                DataStore.applications.add(</span>
+                        application
+                );
+<span class="nc" id="L316">            }</span>
+
+<span class="nc" id="L318">        } catch (SQLException e) {</span>
+
+<span class="nc" id="L320">            System.out.println(</span>
+                    &quot;Could not load applications: &quot;
+<span class="nc" id="L322">                            + e.getMessage()</span>
+            );
+<span class="nc" id="L324">        }</span>
+<span class="nc" id="L325">    }</span>
+
+    private static void loadReports() {
+
+<span class="nc" id="L329">        String sql =</span>
+                &quot;SELECT * FROM reports&quot;;
+
+<span class="nc" id="L332">        try (Connection connection =</span>
+<span class="nc" id="L333">                     DriverManager.getConnection(URL);</span>
+
+<span class="nc" id="L335">             Statement statement =</span>
+<span class="nc" id="L336">                     connection.createStatement();</span>
+
+<span class="nc" id="L338">             ResultSet results =</span>
+<span class="nc" id="L339">                     statement.executeQuery(sql)) {</span>
+
+<span class="nc bnc" id="L341" title="All 2 branches missed.">            while (results.next()) {</span>
+
+<span class="nc" id="L343">                Report report =</span>
+                        new Report(
+<span class="nc" id="L345">                                results.getInt(</span>
+                                        &quot;report_id&quot;
+                                ),
+
+<span class="nc" id="L349">                                results.getInt(</span>
+                                        &quot;student_id&quot;
+                                ),
+
+<span class="nc" id="L353">                                results.getInt(</span>
+                                        &quot;listing_id&quot;
+                                ),
+
+<span class="nc" id="L357">                                results.getString(</span>
+                                        &quot;reason&quot;
+                                )
+                        );
+
+<span class="nc" id="L362">                report.setStatus(</span>
+<span class="nc" id="L363">                        results.getString(</span>
+                                &quot;status&quot;
+                        )
+                );
+
+<span class="nc" id="L368">                DataStore.reports.add(</span>
+                        report
+                );
+<span class="nc" id="L371">            }</span>
+
+<span class="nc" id="L373">        } catch (SQLException e) {</span>
+
+<span class="nc" id="L375">            System.out.println(</span>
+                    &quot;Could not load reports: &quot;
+<span class="nc" id="L377">                            + e.getMessage()</span>
+            );
+<span class="nc" id="L379">        }</span>
+<span class="nc" id="L380">    }</span>
+
+    public static void saveAll() {
+
+<span class="nc" id="L384">        try (Connection connection =</span>
+<span class="nc" id="L385">                     DriverManager.getConnection(URL)) {</span>
+
+<span class="nc" id="L387">            connection.setAutoCommit(</span>
+                    false
+            );
+
+            try {
+
+<span class="nc" id="L393">                clearTables(</span>
+                        connection
+                );
+
+<span class="nc" id="L397">                saveUsers(</span>
+                        connection
+                );
+
+<span class="nc" id="L401">                saveListings(</span>
+                        connection
+                );
+
+<span class="nc" id="L405">                saveApplications(</span>
+                        connection
+                );
+
+<span class="nc" id="L409">                saveReports(</span>
+                        connection
+                );
+
+<span class="nc" id="L413">                connection.commit();</span>
+
+<span class="nc" id="L415">                System.out.println(</span>
+                        &quot;Database saved.&quot;
+                );
+
+<span class="nc" id="L419">            } catch (SQLException e) {</span>
+
+<span class="nc" id="L421">                connection.rollback();</span>
+
+<span class="nc" id="L423">                System.out.println(</span>
+                        &quot;Save failed: &quot;
+<span class="nc" id="L425">                                + e.getMessage()</span>
+                );
+<span class="nc" id="L427">            }</span>
+
+<span class="nc" id="L429">        } catch (SQLException e) {</span>
+
+<span class="nc" id="L431">            System.out.println(</span>
+                    &quot;Database connection error: &quot;
+<span class="nc" id="L433">                            + e.getMessage()</span>
+            );
+<span class="nc" id="L435">        }</span>
+<span class="nc" id="L436">    }</span>
+
+    private static void clearTables(
+            Connection connection)
+            throws SQLException {
+
+<span class="nc" id="L442">        try (Statement statement =</span>
+<span class="nc" id="L443">                     connection.createStatement()) {</span>
+
+<span class="nc" id="L445">            statement.executeUpdate(</span>
+                    &quot;DELETE FROM applications&quot;
+            );
+
+<span class="nc" id="L449">            statement.executeUpdate(</span>
+                    &quot;DELETE FROM reports&quot;
+            );
+
+<span class="nc" id="L453">            statement.executeUpdate(</span>
+                    &quot;DELETE FROM listings&quot;
+            );
+
+<span class="nc" id="L457">            statement.executeUpdate(</span>
+                    &quot;DELETE FROM users&quot;
+            );
+        }
+<span class="nc" id="L461">    }</span>
+
+    private static void saveUsers(
+            Connection connection)
+            throws SQLException {
+
+<span class="nc" id="L467">        String sql =</span>
+                &quot;&quot;&quot;
+                INSERT INTO users
+                (user_id, name, email, password, role)
+                VALUES (?, ?, ?, ?, ?)
+                &quot;&quot;&quot;;
+
+<span class="nc" id="L474">        try (PreparedStatement statement =</span>
+<span class="nc" id="L475">                     connection.prepareStatement(sql)) {</span>
+
+            for (User user :
+<span class="nc bnc" id="L478" title="All 2 branches missed.">                    DataStore.users) {</span>
+
+<span class="nc" id="L480">                statement.setInt(</span>
+                        1,
+<span class="nc" id="L482">                        user.getUserId()</span>
+                );
+
+<span class="nc" id="L485">                statement.setString(</span>
+                        2,
+<span class="nc" id="L487">                        user.getName()</span>
+                );
+
+<span class="nc" id="L490">                statement.setString(</span>
+                        3,
+<span class="nc" id="L492">                        user.getEmail()</span>
+                );
+
+<span class="nc" id="L495">                statement.setString(</span>
+                        4,
+<span class="nc" id="L497">                        user.getPassword()</span>
+                );
+
+<span class="nc" id="L500">                statement.setString(</span>
+                        5,
+<span class="nc" id="L502">                        user.getRole()</span>
+                );
+
+<span class="nc" id="L505">                statement.addBatch();</span>
+<span class="nc" id="L506">            }</span>
+
+<span class="nc" id="L508">            statement.executeBatch();</span>
+        }
+<span class="nc" id="L510">    }</span>
+
+    private static void saveListings(
+            Connection connection)
+            throws SQLException {
+
+<span class="nc" id="L516">        String sql =</span>
+                &quot;&quot;&quot;
+                INSERT INTO listings
+                (
+                    listing_id,
+                    lister_id,
+                    title,
+                    borough,
+                    neighbourhood,
+                    price,
+                    start_date,
+                    end_date,
+                    room_type,
+                    description,
+                    image_path
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                &quot;&quot;&quot;;
+
+<span class="nc" id="L535">        try (PreparedStatement statement =</span>
+<span class="nc" id="L536">                     connection.prepareStatement(sql)) {</span>
+
+            for (Listing listing :
+<span class="nc bnc" id="L539" title="All 2 branches missed.">                    DataStore.listings) {</span>
+
+<span class="nc" id="L541">                statement.setInt(</span>
+                        1,
+<span class="nc" id="L543">                        listing.getListingId()</span>
+                );
+
+<span class="nc" id="L546">                statement.setInt(</span>
+                        2,
+<span class="nc" id="L548">                        listing.getListerId()</span>
+                );
+
+<span class="nc" id="L551">                statement.setString(</span>
+                        3,
+<span class="nc" id="L553">                        listing.getTitle()</span>
+                );
+
+<span class="nc" id="L556">                statement.setString(</span>
+                        4,
+<span class="nc" id="L558">                        listing.getBorough()</span>
+                );
+
+<span class="nc" id="L561">                statement.setString(</span>
+                        5,
+<span class="nc" id="L563">                        listing.getNeighbourhood()</span>
+                );
+
+<span class="nc" id="L566">                statement.setDouble(</span>
+                        6,
+<span class="nc" id="L568">                        listing.getPrice()</span>
+                );
+
+<span class="nc" id="L571">                statement.setString(</span>
+                        7,
+<span class="nc" id="L573">                        listing.getStartDate()</span>
+<span class="nc" id="L574">                                .toString()</span>
+                );
+
+<span class="nc" id="L577">                statement.setString(</span>
+                        8,
+<span class="nc" id="L579">                        listing.getEndDate()</span>
+<span class="nc" id="L580">                                .toString()</span>
+                );
+
+<span class="nc" id="L583">                statement.setString(</span>
+                        9,
+<span class="nc" id="L585">                        listing.getRoomType()</span>
+                );
+
+<span class="nc" id="L588">                statement.setString(</span>
+                        10,
+<span class="nc" id="L590">                        listing.getDescription()</span>
+                );
+
+<span class="nc" id="L593">                statement.setString(</span>
+                        11,
+<span class="nc" id="L595">                        listing.getImagePath()</span>
+                );
+
+<span class="nc" id="L598">                statement.addBatch();</span>
+<span class="nc" id="L599">            }</span>
+
+<span class="nc" id="L601">            statement.executeBatch();</span>
+        }
+<span class="nc" id="L603">    }</span>
+
+    private static void saveApplications(
+            Connection connection)
+            throws SQLException {
+
+<span class="nc" id="L609">        String sql =</span>
+                &quot;&quot;&quot;
+                INSERT INTO applications
+                (
+                    application_id,
+                    student_id,
+                    listing_id,
+                    status
+                )
+                VALUES (?, ?, ?, ?)
+                &quot;&quot;&quot;;
+
+<span class="nc" id="L621">        try (PreparedStatement statement =</span>
+<span class="nc" id="L622">                     connection.prepareStatement(sql)) {</span>
+
+            for (Application application :
+<span class="nc bnc" id="L625" title="All 2 branches missed.">                    DataStore.applications) {</span>
+
+<span class="nc" id="L627">                statement.setInt(</span>
+                        1,
+                        application
+<span class="nc" id="L630">                                .getApplicationId()</span>
+                );
+
+<span class="nc" id="L633">                statement.setInt(</span>
+                        2,
+                        application
+<span class="nc" id="L636">                                .getStudentId()</span>
+                );
+
+<span class="nc" id="L639">                statement.setInt(</span>
+                        3,
+                        application
+<span class="nc" id="L642">                                .getListingId()</span>
+                );
+
+<span class="nc" id="L645">                statement.setString(</span>
+                        4,
+                        application
+<span class="nc" id="L648">                                .getStatus()</span>
+                );
+
+<span class="nc" id="L651">                statement.addBatch();</span>
+<span class="nc" id="L652">            }</span>
+
+<span class="nc" id="L654">            statement.executeBatch();</span>
+        }
+<span class="nc" id="L656">    }</span>
+
+    private static void saveReports(
+            Connection connection)
+            throws SQLException {
+
+<span class="nc" id="L662">        String sql =</span>
+                &quot;&quot;&quot;
+                INSERT INTO reports
+                (
+                    report_id,
+                    student_id,
+                    listing_id,
+                    reason,
+                    status
+                )
+                VALUES (?, ?, ?, ?, ?)
+                &quot;&quot;&quot;;
+
+<span class="nc" id="L675">        try (PreparedStatement statement =</span>
+<span class="nc" id="L676">                     connection.prepareStatement(sql)) {</span>
+
+            for (Report report :
+<span class="nc bnc" id="L679" title="All 2 branches missed.">                    DataStore.reports) {</span>
+
+<span class="nc" id="L681">                statement.setInt(</span>
+                        1,
+<span class="nc" id="L683">                        report.getReportId()</span>
+                );
+
+<span class="nc" id="L686">                statement.setInt(</span>
+                        2,
+<span class="nc" id="L688">                        report.getStudentId()</span>
+                );
+
+<span class="nc" id="L691">                statement.setInt(</span>
+                        3,
+<span class="nc" id="L693">                        report.getListingId()</span>
+                );
+
+<span class="nc" id="L696">                statement.setString(</span>
+                        4,
+<span class="nc" id="L698">                        report.getReason()</span>
+                );
+
+<span class="nc" id="L701">                statement.setString(</span>
+                        5,
+<span class="nc" id="L703">                        report.getStatus()</span>
+                );
+
+<span class="nc" id="L706">                statement.addBatch();</span>
+<span class="nc" id="L707">            }</span>
+
+<span class="nc" id="L709">            statement.executeBatch();</span>
+        }
+<span class="nc" id="L711">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BerlinLocations.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sublet-management-system</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">BerlinLocations.java</span></div><h1>BerlinLocations.java</h1><pre class="source lang-java linenums">import java.util.LinkedHashMap;
+import java.util.Map;
+
+<span class="nc" id="L4">public class BerlinLocations {</span>
+
+    // Berlin boroughs and their neighbourhoods
+<span class="nc" id="L7">    private static final Map&lt;String, String[]&gt; locations = new LinkedHashMap&lt;&gt;();</span>
+
+    static {
+<span class="nc" id="L10">        locations.put(&quot;Mitte&quot;, new String[]{</span>
+                &quot;Mitte&quot;,
+                &quot;Moabit&quot;,
+                &quot;Hansaviertel&quot;,
+                &quot;Tiergarten&quot;,
+                &quot;Wedding&quot;,
+                &quot;Gesundbrunnen&quot;
+        });
+
+<span class="nc" id="L19">        locations.put(&quot;Friedrichshain-Kreuzberg&quot;, new String[]{</span>
+                &quot;Friedrichshain&quot;,
+                &quot;Kreuzberg&quot;
+        });
+
+<span class="nc" id="L24">        locations.put(&quot;Pankow&quot;, new String[]{</span>
+                &quot;Prenzlauer Berg&quot;,
+                &quot;Weißensee&quot;,
+                &quot;Blankenburg&quot;,
+                &quot;Heinersdorf&quot;,
+                &quot;Karow&quot;,
+                &quot;Stadtrandsiedlung Malchow&quot;,
+                &quot;Pankow&quot;,
+                &quot;Blankenfelde&quot;,
+                &quot;Buch&quot;,
+                &quot;Französisch Buchholz&quot;,
+                &quot;Niederschönhausen&quot;,
+                &quot;Rosenthal&quot;,
+                &quot;Wilhelmsruh&quot;
+        });
+
+<span class="nc" id="L40">        locations.put(&quot;Charlottenburg-Wilmersdorf&quot;, new String[]{</span>
+                &quot;Charlottenburg&quot;,
+                &quot;Westend&quot;,
+                &quot;Charlottenburg-Nord&quot;,
+                &quot;Wilmersdorf&quot;,
+                &quot;Schmargendorf&quot;,
+                &quot;Grunewald&quot;,
+                &quot;Halensee&quot;
+        });
+
+<span class="nc" id="L50">        locations.put(&quot;Spandau&quot;, new String[]{</span>
+                &quot;Spandau&quot;,
+                &quot;Haselhorst&quot;,
+                &quot;Siemensstadt&quot;,
+                &quot;Staaken&quot;,
+                &quot;Gatow&quot;,
+                &quot;Kladow&quot;,
+                &quot;Hakenfelde&quot;,
+                &quot;Falkenhagener Feld&quot;,
+                &quot;Wilhelmstadt&quot;
+        });
+
+<span class="nc" id="L62">        locations.put(&quot;Steglitz-Zehlendorf&quot;, new String[]{</span>
+                &quot;Steglitz&quot;,
+                &quot;Lichterfelde&quot;,
+                &quot;Lankwitz&quot;,
+                &quot;Zehlendorf&quot;,
+                &quot;Dahlem&quot;,
+                &quot;Nikolassee&quot;,
+                &quot;Wannsee&quot;,
+                &quot;Schlachtensee&quot;
+        });
+
+<span class="nc" id="L73">        locations.put(&quot;Tempelhof-Schöneberg&quot;, new String[]{</span>
+                &quot;Schöneberg&quot;,
+                &quot;Friedenau&quot;,
+                &quot;Tempelhof&quot;,
+                &quot;Mariendorf&quot;,
+                &quot;Marienfelde&quot;,
+                &quot;Lichtenrade&quot;
+        });
+
+<span class="nc" id="L82">        locations.put(&quot;Neukölln&quot;, new String[]{</span>
+                &quot;Neukölln&quot;,
+                &quot;Britz&quot;,
+                &quot;Buckow&quot;,
+                &quot;Rudow&quot;,
+                &quot;Gropiusstadt&quot;
+        });
+
+<span class="nc" id="L90">        locations.put(&quot;Treptow-Köpenick&quot;, new String[]{</span>
+                &quot;Alt-Treptow&quot;,
+                &quot;Plänterwald&quot;,
+                &quot;Baumschulenweg&quot;,
+                &quot;Johannisthal&quot;,
+                &quot;Niederschöneweide&quot;,
+                &quot;Altglienicke&quot;,
+                &quot;Adlershof&quot;,
+                &quot;Bohnsdorf&quot;,
+                &quot;Oberschöneweide&quot;,
+                &quot;Köpenick&quot;,
+                &quot;Friedrichshagen&quot;,
+                &quot;Rahnsdorf&quot;,
+                &quot;Grünau&quot;,
+                &quot;Müggelheim&quot;,
+                &quot;Schmöckwitz&quot;
+        });
+
+<span class="nc" id="L108">        locations.put(&quot;Marzahn-Hellersdorf&quot;, new String[]{</span>
+                &quot;Marzahn&quot;,
+                &quot;Biesdorf&quot;,
+                &quot;Kaulsdorf&quot;,
+                &quot;Mahlsdorf&quot;,
+                &quot;Hellersdorf&quot;
+        });
+
+<span class="nc" id="L116">        locations.put(&quot;Lichtenberg&quot;, new String[]{</span>
+                &quot;Friedrichsfelde&quot;,
+                &quot;Karlshorst&quot;,
+                &quot;Lichtenberg&quot;,
+                &quot;Fennpfuhl&quot;,
+                &quot;Rummelsburg&quot;,
+                &quot;Falkenberg&quot;,
+                &quot;Malchow&quot;,
+                &quot;Wartenberg&quot;,
+                &quot;Neu-Hohenschönhausen&quot;,
+                &quot;Alt-Hohenschönhausen&quot;
+        });
+
+<span class="nc" id="L129">        locations.put(&quot;Reinickendorf&quot;, new String[]{</span>
+                &quot;Reinickendorf&quot;,
+                &quot;Tegel&quot;,
+                &quot;Konradshöhe&quot;,
+                &quot;Heiligensee&quot;,
+                &quot;Frohnau&quot;,
+                &quot;Hermsdorf&quot;,
+                &quot;Waidmannslust&quot;,
+                &quot;Lübars&quot;,
+                &quot;Wittenau&quot;,
+                &quot;Märkisches Viertel&quot;,
+                &quot;Borsigwalde&quot;
+        });
+<span class="nc" id="L142">    }</span>
+
+    public static String[] getBoroughs() {
+<span class="nc" id="L145">        return locations.keySet().toArray(new String[0]);</span>
+    }
+
+    public static String[] getNeighbourhoods(String borough) {
+<span class="nc" id="L149">        return locations.getOrDefault(borough, new String[0]);</span>
+    }
+
+    // Checks that a neighbourhood belongs to the selected borough
+    public static boolean validLocation(String borough, String neighbourhood) {
+
+<span class="nc" id="L155">        String[] neighbourhoods = getNeighbourhoods(borough);</span>
+
+<span class="nc bnc" id="L157" title="All 2 branches missed.">        for (String area : neighbourhoods) {</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">            if (area.equals(neighbourhood)) {</span>
+<span class="nc" id="L159">                return true;</span>
+            }
+        }
+
+<span class="nc" id="L163">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
